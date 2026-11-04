@@ -113,8 +113,8 @@ export const TUNING = {
   physics: {
     dt: 1 / 120,
     gravity: 32.17, // ft/s²
-    drag: 0.00185, // 1/ft  (a = -k|v|v)
-    magnus: 0.00075, // lift coefficient factor
+    drag: 0.0018, // 1/ft  (a = -k|v|v); calibrated: 100mph@28° ≈ 396 ft, 110@30 ≈ 451 ft
+    magnus: 0.0008, // lift factor (a = k·spin·|v|²)
     restitution: 0.42,
     groundKeep: 0.62, // horizontal velocity kept on bounce
     rollFriction: 14, // ft/s² rolling deceleration
