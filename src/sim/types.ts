@@ -47,7 +47,7 @@ export type Action =
   | { type: 'chargeStart'; t?: number; zx: number; zz: number }
   | { type: 'chargeMove'; t?: number; zx: number; zz: number }
   | { type: 'chargeEnd'; t?: number; zx?: number; zz?: number }
-  | { type: 'steer'; t?: number; dx: number }
+  | { type: 'steer'; t?: number; dx: number; hold?: -1 | 0 | 1 }
   | { type: 'throwTo'; t?: number; base: number }
   | { type: 'sendHold'; t?: number; send: boolean }
   | { type: 'skip'; t?: number }
@@ -100,6 +100,8 @@ export type SimEvent =
   | { type: 'run'; team: number }
   | { type: 'homeRun'; dist: number; walkoff: boolean }
   | { type: 'walk' }
+  | { type: 'walkoff' }
+  | { type: 'clutchResult'; win: boolean }
   | { type: 'strikeout' }
   | { type: 'hit'; bases: number }
   | { type: 'halfEnd'; inning: number; half: number }

@@ -116,14 +116,14 @@ export function contactOut(g: Grade, c: ContactCtx, w: Windows): ContactOut {
     case 'GOOD': {
       const q = clamp01((Math.abs(o) - w.perfect) / Math.max(1, w.good - w.perfect));
       ev = lerp(96, 86, q);
-      la = 18;
+      la = lerp(20, 3, q);
       break;
     }
     case 'EARLY':
     case 'LATE': {
       const q = clamp01((Math.abs(o) - w.good) / Math.max(1, w.foulFrom - w.good));
       ev = lerp(80, 70, q);
-      la = 12;
+      la = lerp(10, -6, q);
       spray = h * Math.sign(rel || (g === 'EARLY' ? -1 : 1)) * Math.max(Math.abs(spray), 32);
       break;
     }
@@ -148,6 +148,8 @@ export function contactOut(g: Grade, c: ContactCtx, w: Windows): ContactOut {
     case 'WHIFF':
       return { ev: 0, la: 0, spray: 0 };
   }
+  // Pitch height shifts launch angle (low pitches go on the ground), except for All-Star reticle aim.
+  if (c.tier !== 'allstar' && (g === 'PERFECT' || g === 'GOOD' || g === 'EARLY' || g === 'LATE')) la += clamp((c.cross.z - 2.55) * 9, -9, 9);
   ev += (c.powerRating - 5) * 1.6;
   if (c.power) ev *= TUNING.timing.powerEv;
   if (c.starSwing && (g === 'PERFECT' || g === 'GOOD')) ev = c.maxEv;
