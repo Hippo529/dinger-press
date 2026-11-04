@@ -1,0 +1,1465 @@
+[
+ {
+  "id": "F001",
+  "tier": "core",
+  "category": "testability",
+  "description": "npm scripts dev/build/build:single/test/check/verify exist and run",
+  "steps": [
+   "Run each script",
+   "Each exits 0 (verify may report failing scenarios but must run)"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F002",
+  "tier": "core",
+  "category": "testability",
+  "description": "npm run check fails on src files >450 lines, forbidden sim imports (render/fx/audio/ui/window/document) and Math.random in src/sim, and runs tsc --noEmit",
+  "steps": [
+   "Add a temp violating file in a test fixture",
+   "check script unit test asserts each violation type is reported"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F003",
+  "tier": "core",
+  "category": "testability",
+  "description": "window.render_game_to_text() returns JSON with mode, state, inning, half, outs, count, score, runners, ball pos/vel, last grade/ev/la/dist, stars, prompts+buttons with rects, settings, coord note",
+  "steps": [
+   "Load ?test=1, parse output",
+   "verify asserts listed keys present on title; during a pitch in flight ball.pos is non-null and ball.vel.y<0; tapping the centre of each reported button rect fires its action (D3)"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F004",
+  "tier": "core",
+  "category": "testability",
+  "description": "window.advanceTime(ms) steps sim in fixed 1/120 s increments then renders; with ?test=1 rAF never advances sim",
+  "steps": [
+   "Load ?test=1, read state, wait 500 ms real time, read again",
+   "State identical; advanceTime(500) changes sim time by 0.5 s"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F005",
+  "tier": "core",
+  "category": "testability",
+  "description": "?seed=N seeds RNG: two loads with same seed and same actions produce identical render_game_to_text",
+  "steps": [
+   "verify loads seed=7 twice and plays 3 scripted pitches",
+   "JSON outputs equal"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F006",
+  "tier": "core",
+  "category": "testability",
+  "description": "Unit test: same seed + same input log => identical final state hash (full Short Run)",
+  "steps": [
+   "vitest replays recorded input log",
+   "hashes equal; different seed differs"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F007",
+  "tier": "core",
+  "category": "testability",
+  "description": "?debug=1 exposes window.__game {getState,setState,step,pause,act,log} and an overlay with state, trauma, last timing offset",
+  "steps": [
+   "verify loads ?debug=1",
+   "__game methods exist; overlay text visible in screenshot"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F008",
+  "tier": "core",
+  "category": "testability",
+  "description": "npm run verify runs desktop 1280x720, iPhone 17 Pro portrait and landscape; fails on pageerror/console.error; prints VERIFY line",
+  "steps": [
+   "Run npm run verify",
+   "Last line matches VERIFY: n/n scenarios, 0 page errors, 0 console errors"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F009",
+  "tier": "core",
+  "category": "engine",
+  "description": "Fixed 1/120 s timestep with accumulator clamp 250 ms, interpolation alpha and time-scale multiplier",
+  "steps": [
+   "Unit test loop with fake clock: 1 s wall at scale 0.5 => 60 steps; 1 s gap clamps to 30 steps",
+   "Assertions pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F010",
+  "tier": "core",
+  "category": "engine",
+  "description": "Seeded mulberry32 RNG with serialisable state; Math.random never used in src/sim",
+  "steps": [
+   "check script + unit test of RNG sequence for seed 1",
+   "check passes; sequence matches fixture"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F011",
+  "tier": "core",
+  "category": "physics",
+  "description": "Batted-ball ballistics with gravity, quadratic drag and Magnus lift calibrated: 100 mph@28° lands 380–410 ft, 110 mph@30° 440–470 ft",
+  "steps": [
+   "vitest physics.test",
+   "Both carry assertions pass; 95 mph@-10° is a grounder (<=150 ft first bounce)"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F012",
+  "tier": "core",
+  "category": "physics",
+  "description": "Ground bounce and roll; fence per stadium angle; HR when crossing fence above height, rebound below",
+  "steps": [
+   "Unit test ball at 105 mph 32° pull vs default fence",
+   "HR flag true; same ball into 38 ft Gutter wall at height<38 rebounds"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F013",
+  "tier": "core",
+  "category": "physics",
+  "description": "Fair/foul: |spray|>45° at first ground contact or fence = foul",
+  "steps": [
+   "Unit test spray 50° and 40°",
+   "foul true / false"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F014",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Parametric pitch path ends exactly at the target at T; break profiles for 8 pitch types with distinct B/D/p",
+  "steps": [
+   "Unit test each type position(T) == target within 0.01 ft",
+   "Assertions pass; curve mid-flight deviates from straight line by >0.5 ft"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F015",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Fastball flight time 0.85/0.65/0.50 s at HEAT 0/50/99; off-speed 15–25% slower",
+  "steps": [
+   "Unit test flightTime()",
+   "Values within 0.01 s"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F016",
+  "tier": "core",
+  "category": "batting",
+  "description": "Swing judged at input timestamp mapped to sim time, not at frame; identical grade at 60 and 120 Hz render rates",
+  "steps": [
+   "Unit test: same swing timestamp processed with 16.7 ms vs 8.3 ms frame chunks",
+   "Same offset ms and grade"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F017",
+  "tier": "core",
+  "category": "batting",
+  "description": "Grades PERFECT (−40/+48), GOOD ±100, EARLY/LATE, FOUL to ±160, WHIFF beyond, scaled by HEAT, POWER 0.65, Star 1.6, newbie 1.5",
+  "steps": [
+   "Unit test grade() at boundary offsets for HEAT 0 and with POWER, Star, newbie, contact rating 0/10 and Pesky multipliers",
+   "Each boundary maps to documented grade; +8 ms late grace stays exactly 8 ms when windows scale"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F018",
+  "tier": "core",
+  "category": "batting",
+  "description": "Location overrides: inside => JAMMED, away => EARLY/LATE (all tiers); high => UNDER, low => TOPPED (Pro); Rookie auto-aligned",
+  "steps": [
+   "Unit test out-of-zone pitches with GOOD timing per tier",
+   "Pro grades match; Rookie high pitch with PERFECT timing grades PERFECT"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F019",
+  "tier": "core",
+  "category": "batting",
+  "description": "Grade => EV/LA/spray mapping deterministic; early pulls, late goes opposite field",
+  "steps": [
+   "Unit test: RHB offset −60 gives negative (LF) spray, LHB positive; +60 opposite; repeat call equal",
+   "Assertions pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F020",
+  "tier": "core",
+  "category": "batting",
+  "description": "Exit velocity and distance readout (\"108 mph · 431 ft\") on solid contact",
+  "steps": [
+   "verify: force PERFECT via debug act, screenshot",
+   "render_game_to_text lastEv/lastDist set; text visible in screenshot"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F021",
+  "tier": "core",
+  "category": "batting",
+  "description": "Timing bar after every swing: centre notch, marker left=early right=late, grade word; ms offset in The Cage",
+  "steps": [
+   "verify swing early then late",
+   "render_game_to_text timingBar.offsetMs sign matches; screenshot shows bar"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F022",
+  "tier": "core",
+  "category": "batting",
+  "description": "Rookie tier: tap anywhere in play area swings on pointerdown",
+  "steps": [
+   "verify iPhone: dispatch pointerdown without pointerup during pitch; separately tap POWER chip",
+   "pointerdown alone produces a swing grade; POWER chip tap toggles power and does not swing"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F023",
+  "tier": "core",
+  "category": "batting",
+  "description": "Pro tier: tap position in swing pad biases LA (upper +, lower −) and spray (left/right)",
+  "steps": [
+   "Unit test: same timing in upper/middle/lower third and left/right",
+   "LA offsets exactly +9°/0/−14°; spray offsets ±12°"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F024",
+  "tier": "core",
+  "category": "batting",
+  "description": "All-Star tier: press-drag reticle drawn above thumb, swing on pointerup; reticle miss => WHIFF; vertical error => TOPPED/UNDER",
+  "steps": [
+   "Unit test grade with reticle offsets; verify drag+release",
+   "Grades match; reticle rect in render_game_to_text is above touch point"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F025",
+  "tier": "core",
+  "category": "batting",
+  "description": "POWER toggle before release, locked after release; shrinks windows/radius, +15% EV; stance visibly changes",
+  "steps": [
+   "verify toggle via chip tap, then try toggling after release",
+   "power true pre-release, unchanged after release; screenshot shows crouched stance"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F026",
+  "tier": "core",
+  "category": "batting",
+  "description": "Keyboard: Space/mousedown swing, WASD/arrows direction (Pro), Shift power, E star",
+  "steps": [
+   "verify desktop key presses",
+   "Each action changes state as documented"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F027",
+  "tier": "core",
+  "category": "input",
+  "description": "Input layer maps raw events to semantic actions with timeStamp; pointerdown not click; inputs during hit-stop/transitions are buffered",
+  "steps": [
+   "Unit test mapper with synthetic events; buffered action applied after hit-stop",
+   "pointerdown→swing with same timeStamp; click events ignored; action during hit-stop applied once afterwards"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F028",
+  "tier": "core",
+  "category": "rules",
+  "description": "Count: 4 balls walk, 3 strikes K, foul with 2 strikes no strike, called strikes on takes in zone",
+  "steps": [
+   "Unit test rules sequence",
+   "Counts/outs as expected"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F029",
+  "tier": "core",
+  "category": "rules",
+  "description": "Outs, half-innings, innings, score, runner forcing on walks",
+  "steps": [
+   "Unit test bases-loaded walk scores one",
+   "Score +1, bases still loaded"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F030",
+  "tier": "core",
+  "category": "rules",
+  "description": "Short Run: 3 innings, home team bats bottom, game ends after top 3rd if home leads, walk-off ends immediately",
+  "steps": [
+   "Unit tests: home leads after top 3 => over; bottom 3 go-ahead run => walkoff over immediately",
+   "Both exact"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F031",
+  "tier": "core",
+  "category": "rules",
+  "description": "Mercy rule: lead >5 after 1st or 2nd inning ends game",
+  "steps": [
+   "Unit test + verify via debug setState",
+   "state gameOver with reason mercy"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F032",
+  "tier": "core",
+  "category": "rules",
+  "description": "Extras: innings 4–6 start each half with runner on 2nd; after 6 tied, 3-swing sudden-death derby then 1-swing rounds",
+  "steps": [
+   "Unit test with scripted tied game",
+   "Runner on 2nd at start of each half in innings 4–6; tiebreak phase reached after 6; tiebreak winner = more HRs in 3 swings, then 1-swing rounds"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F033",
+  "tier": "core",
+  "category": "fielding",
+  "description": "Deterministic intercept: fielder with smallest intercept time chases; others cover bases per fundamentals",
+  "steps": [
+   "Unit test: grounder at spray −20° 85 mph LA −8; fly at spray +18° 95 mph LA 30",
+   "Chaser is SS for grounder and RF or CF (min intercept) for fly; 1B covers first, 3B third, C home, SS or 2B covers second"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F034",
+  "tier": "core",
+  "category": "fielding",
+  "description": "Fly balls caught when reachable => out; \"Diving catch!\" when slack <0.2 s; uncatchable => \"LINE DRIVE — no chance\"/\"In the gap!\"",
+  "steps": [
+   "Unit tests on prediction",
+   "Outcome texts match"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F035",
+  "tier": "core",
+  "category": "fielding",
+  "description": "Throw decision picks best out (lead runner preference), cutoff relay beyond 150 ft, double plays via re-evaluation",
+  "steps": [
+   "Unit test: runner on 1st, 0 out, GOOD grounder to SS",
+   "Result is double play with text \"Two!\""
+  ],
+  "passes": false
+ },
+ {
+  "id": "F036",
+  "tier": "core",
+  "category": "fielding",
+  "description": "Player fielding: 1B/2B/3B/HOME buttons (or keys 1–4) one-tap throw; auto-assist throws to correct base after 1.2 s",
+  "steps": [
+   "verify: tap HOME button / press key 1 on throw prompt; and idle",
+   "throwTarget equals tapped base; idle => assist target after 1.2±0.1 s"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F037",
+  "tier": "core",
+  "category": "running",
+  "description": "Runners advance by hit type and Conservative/Aggressive margins; never pass the runner ahead; no runner idles on a ball in the gap",
+  "steps": [
+   "Unit test double into gap with runner on 1st",
+   "Runner on 1st reaches >=3rd; all runners stopped on bases at dead ball"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F038",
+  "tier": "core",
+  "category": "running",
+  "description": "SEND/HOLD prompt only on close calls (|margin|<0.35 s) for player batting team; defaults to setting",
+  "steps": [
+   "Unit test margins −0.5, −0.2, 0.2, 0.5 for player batting and CPU batting; verify prompt appears via debug-set scenario",
+   "prompt only for |margin|<0.35 and only when player bats; untapped resolves to setting"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F039",
+  "tier": "core",
+  "category": "running",
+  "description": "Outcome explanations: \"Beat the throw by a step\", \"Out by a mile\", \"Gap shot — runner scores\" etc.",
+  "steps": [
+   "Unit test explain(): margin 0.1 safe, 1.5 out, gap hit with run scored, double play, diving catch, line drive no chance",
+   "Each returns its documented string"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F040",
+  "tier": "core",
+  "category": "fielding",
+  "description": "Fielding never visibly blunders: bot plays 30 games; assert no throw to base without approaching runner when an out was available, chaser always min-intercept",
+  "steps": [
+   "vitest bot audit",
+   "0 violations"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F041",
+  "tier": "core",
+  "category": "ai",
+  "description": "CPU batter: swing decision and timing sd scale with HEAT (120 ms → 35 ms)",
+  "steps": [
+   "Sim 300 CPU at-bats vs fixed pitches at HEAT 0 and 99",
+   "timing sd within ±15% of 120 and 35 ms; contact rate on in-zone swings ≥0.25 higher at 99"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F042",
+  "tier": "core",
+  "category": "ai",
+  "description": "CPU pitcher: pitch selection respects repertoire, tiredness and stamina; accuracy scales with HEAT",
+  "steps": [
+   "Unit test 50 CPU pitches at HEAT 0 and 99",
+   "No pitch outside repertoire; repeat rate <60%; mean target error at 99 ≤ half of HEAT 0"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F043",
+  "tier": "core",
+  "category": "ai",
+  "description": "No hidden late-game boost: CPU skill depends only on HEAT",
+  "steps": [
+   "Unit test CPU params identical across innings/scores",
+   "Equal"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F044",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Player pitching: pitch chip (default last), hold-in-zone sets target via offset marker while charge ring fills; release timing sets velo/accuracy",
+  "steps": [
+   "verify iPhone: tap chip, press-hold, release at sweet band",
+   "Pitch released with charge quality \"perfect\""
+  ],
+  "passes": false
+ },
+ {
+  "id": "F045",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Early release slower pitch; late release scatter (wild or hanging)",
+  "steps": [
+   "Unit test pitchFromCharge",
+   "Speed lower early; error larger late"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F046",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Steer in flight by horizontal drag or A/D, clamped to break budget, until s=0.7",
+  "steps": [
+   "Unit test steer clamp",
+   "Final x within budget"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F047",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Assist setting: single tap pitches with perfect charge",
+  "steps": [
+   "verify with assist on",
+   "pitch released on single tap"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F048",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Stamina and per-type tiredness reduce speed/break/accuracy; stamina on HUD; tired pips on chips",
+  "steps": [
+   "Unit test 10 same pitches, then alternate types",
+   "Velocity decreases monotonically; stamina clamped 0–100; switching type restores ≥ half the lost velocity; HUD stamina rect present"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F049",
+  "tier": "core",
+  "category": "pitching",
+  "description": "Each pitch type has a distinct visual tell (seam/spin pattern + trail tint)",
+  "steps": [
+   "Screenshots of 4 pitch types in The Cage",
+   "Trail tints differ; documented in render code"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F050",
+  "tier": "core",
+  "category": "modes",
+  "description": "Short Run full game playable vs CPU to game over and restart",
+  "steps": [
+   "verify: bot via __game finishes a game; restart button returns to play; bot also finishes Mill, Proof, a Clutch Card and a Cage session in vitest",
+   "state gameOver then play; each mode reaches its end state"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F051",
+  "tier": "core",
+  "category": "modes",
+  "description": "First pitch within ~5 s of tapping Play (no mandatory menus); first run the player bats first",
+  "steps": [
+   "verify fresh storage: tap Play then Short Run; measure time to pitchReleased",
+   "<=5 s; player is batting on first pitch"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F052",
+  "tier": "core",
+  "category": "modes",
+  "description": "Moonshot Mill: 10 outs, non-HR swing = out, called strike = out, ball = free; streak multiplier and PERFECT bonus",
+  "steps": [
+   "Unit tests: foul is an out, called strike is an out, ball is free, ends at 10 outs; HRs of 400,410,420 ft at HEAT 0 with streak starting at 0 on first HR score 400+512.5+630=1542.5; PERFECT adds 100",
+   "All exact"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F053",
+  "tier": "core",
+  "category": "modes",
+  "description": "Moonshot Mill pass-and-play 2–8 players with handoff screens and results table",
+  "steps": [
+   "verify 2-player derby via debug",
+   "handoff state between players; results lists both"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F054",
+  "tier": "core",
+  "category": "modes",
+  "description": "Pass the Proof: 2 players each bat own half vs CPU tuned to own HEAT; handoff between halves",
+  "steps": [
+   "Scripted Versus game with 6 halves and a mercy game",
+   "handoffs = halves − 1 exactly; per-player HEAT applied to CPU pitcher flight time"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F055",
+  "tier": "core",
+  "category": "modes",
+  "description": "Handoff screen ignores touches for 400 ms then \"tap when ready\" advances",
+  "steps": [
+   "verify: tap at 100 ms, then at 500 ms",
+   "first tap ignored; second advances"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F056",
+  "tier": "core",
+  "category": "modes",
+  "description": "Clutch Cards: 8 authored scenarios with win checks, each 60–90 s typical",
+  "steps": [
+   "Bot plays each card in vitest; print durations",
+   "Each resolves to win/lose by its documented check; median sim duration 45–110 s (D10)"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F057",
+  "tier": "core",
+  "category": "modes",
+  "description": "Today's Edition daily card seeded from date",
+  "steps": [
+   "Unit test generator over 30 consecutive dates",
+   "Same date => identical params; ≥20 distinct param sets across 30 dates; win check consistent with params"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F058",
+  "tier": "core",
+  "category": "modes",
+  "description": "The Cage: no outs, choose pitch type and HEAT, ms readout, indicator toggles",
+  "steps": [
+   "verify Cage swing shows \"±NN ms\"",
+   "render_game_to_text timingBar.ms shown"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F059",
+  "tier": "core",
+  "category": "stars",
+  "description": "Stars 0–5 per team earned by PERFECT, strikeout, extra-base hit; stacking; capped at 5; star meter drawn on HUD; STAR chip tap/E spends",
+  "steps": [
+   "Unit test awards incl. PERFECT double (+2) and cap; verify STAR chip tap",
+   "Counts exact; chip tap sets starArmed and decrements on release"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F060",
+  "tier": "core",
+  "category": "stars",
+  "description": "Star Chance prompt in high-leverage moments; success +2",
+  "steps": [
+   "Unit test leverage cases (bases loaded; RISP trailing last inning; empty early)",
+   "prompt true for first two, false for third; success awards +2 stacked with other awards"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F061",
+  "tier": "core",
+  "category": "stars",
+  "description": "Star Swing (window ×1.6, max EV on GOOD+) and Star Pitch (break ×1.8 + loud tell); spending deducts 1",
+  "steps": [
+   "Unit tests: Star Swing GOOD gives max EV; Star Pitch break = 1.8×; CPU uses Star Pitch only with ≥2 stars and high leverage",
+   "All pass; audio log has starPitchTell at release"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F062",
+  "tier": "core",
+  "category": "fairness",
+  "description": "Nothing random overrides input: grade/EV/LA/spray depend only on inputs + pitch, never RNG",
+  "steps": [
+   "Unit test: grade function called with different RNG states gives equal output",
+   "Equal"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F063",
+  "tier": "core",
+  "category": "flow",
+  "description": "Dead time: next windup <=0.8 s after take/whiff; next pitch ready <=1.2 s after ball dead; HR celebration <=3.5 s; tap skips ceremony",
+  "steps": [
+   "Bot measures intervals over 3 full games; verify tap during HR celebration",
+   "take/whiff→windup ≤0.8 s, dead→ready ≤1.2 s, HR→ready ≤3.5 s real; tap ends celebration within 1 frame"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F064",
+  "tier": "core",
+  "category": "flow",
+  "description": "Teach through play: first-ever pitch slow centred meatball with pulsing cue; timing bar after first swing; first 3 pitches ×1.5 windows",
+  "steps": [
+   "verify with fresh storage; unit test windows",
+   "cue text visible; first pitch centred (|x|<0.1, z mid-zone) and flight >=1.1 s; timingBar hidden before swing; windows ×1.5 on pitches 1–3 and ×1 on 4"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F065",
+  "tier": "core",
+  "category": "flow",
+  "description": "In-context explainer <=30 s (strikes, balls, outs, innings) skippable",
+  "steps": [
+   "verify explainer appears on first Short Run and Skip works",
+   "state play after skip"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F066",
+  "tier": "core",
+  "category": "feel",
+  "description": "All feel numbers in src/config/tuning.ts grouped and commented with units; read live",
+  "steps": [
+   "check: grep for magic numbers in fx modules references tuning",
+   "Review + debug panel changes take effect next event"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F067",
+  "tier": "core",
+  "category": "feel",
+  "description": "Hit-stop: time-scale 0 for 40/90/150 ms (cap 200), K mitt pop 80 ms; UI/audio/input keep running; begins after contact frame rendered; bat/ball vibrate ±3 px",
+  "steps": [
+   "Unit test fx hitstop durations and ordering; verify PERFECT freeze screenshot",
+   "Durations match; sim time unchanged across freeze; fx records ≥1 rendered frame of contact before timeScale=0"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F068",
+  "tier": "core",
+  "category": "feel",
+  "description": "Trauma shake: trauma² with 3 noise channels, max 2% short side / 2°, decay 1.2/s, world only, never between release and contact",
+  "steps": [
+   "Unit test shake offsets bound; trauma suppressed during pitch",
+   "Assertions pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F069",
+  "tier": "core",
+  "category": "feel",
+  "description": "Slow-mo for HR/walk-off only: 0.35 for 0.8 s, ease back 0.3 s easeOutCubic; tap skips",
+  "steps": [
+   "verify forced HR: timeScale sampled; bot game logs min timeScale per play",
+   "timeScale 0.35 then 1 on HR; never <1 outside hit-stop on non-HR plays"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F070",
+  "tier": "core",
+  "category": "feel",
+  "description": "Camera: static batting view to contact, zoom punch 1.07 during hit-stop, exponential follow k≈6 to landing; ball ground shadow always",
+  "steps": [
+   "Screenshots PERFECT freeze vs field follow",
+   "Shadow visible; camera mode changes"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F071",
+  "tier": "core",
+  "category": "feel",
+  "description": "Contact grade feedback consistent: each grade has label, sound layers, hit-stop, particle burst, popup",
+  "steps": [
+   "Unit test feedback table",
+   "All 9 grades have label, ≥1 sound layer, hit-stop ms, particle count, popup text; calling twice yields identical params"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F072",
+  "tier": "core",
+  "category": "feel",
+  "description": "Easing library (easeOutBack c1=1.70158, easeOutElastic, easeOutCubic, easeInBack)",
+  "steps": [
+   "Unit test endpoints 0→0, 1→1 and easeOutBack overshoot",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F073",
+  "tier": "core",
+  "category": "feel",
+  "description": "Particle pool cap 300 with no per-frame allocation; contact bursts 10–20 by grade; mitt puff 6–12; HR fireworks <=150",
+  "steps": [
+   "Unit test pool",
+   "Live count never exceeds 300; pool array identity constant"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F074",
+  "tier": "core",
+  "category": "accessibility",
+  "description": "Reduce Motion (default from prefers-reduced-motion): zero shake, still freeze + banner instead of zoom/slow-mo, no flashes; separate shake 0/50/100, flashes, slow-mo settings",
+  "steps": [
+   "verify with reducedMotion emulation; unit test shake at 50%",
+   "setting defaults on; shake offset 0, no zoom punch, no slow-mo (timeScale ≥1 except hitstop), flash count 0; 50% halves offset"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F075",
+  "tier": "core",
+  "category": "accessibility",
+  "description": "Flash governor <=3 flashes per 1 s window; HR flash <=35% white once; never saturated red",
+  "steps": [
+   "Unit test governor",
+   "4th flash in 1 s rejected"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F076",
+  "tier": "core",
+  "category": "accessibility",
+  "description": "Nothing conveyed by colour alone: count, timing, zone markers use shape/position/text too",
+  "steps": [
+   "Unit test HUD spec: count uses filled/empty pips + letters, timing marker has shape per side, zone marker has outline",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F077",
+  "tier": "core",
+  "category": "audio",
+  "description": "Single lazy AudioContext resumed on first pointerdown/keydown with 1-sample silent buffer",
+  "steps": [
+   "verify: tap, then read AudioContext.state",
+   "state === running; audio log contains unlock"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F078",
+  "tier": "core",
+  "category": "audio",
+  "description": "Bat crack (bandpassed noise + thock, brighter/louder with EV, layered by grade), mitt pop, crowd bed with tension, organ stinger, PA chime, walk-up motif, convolver reverb",
+  "steps": [
+   "OfflineAudioContext render of crack at EV 70 and 110, mitt, organ, chime in verify; at-bat log",
+   "each RMS > 0.01; crack at 110 has higher spectral centroid than at 70; log includes crack, mitt, crowd, organ, chime, walkup"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F079",
+  "tier": "core",
+  "category": "audio",
+  "description": "SFX variation ±1.5 st never repeating variant; strike sting +2 st per strike; streak chime +1 st per hit; crowd ducks 8 dB for 300 ms under crack",
+  "steps": [
+   "Unit test variation picker and semitone math",
+   "Assertions pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F080",
+  "tier": "core",
+  "category": "audio",
+  "description": "Every triggered sound written to an event log",
+  "steps": [
+   "verify reads __game.log",
+   "non-empty with names"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F081",
+  "tier": "polish",
+  "category": "art",
+  "description": "SPEC art bible with three directions, chosen \"Overprint\" with tokens, fonts, shape, characters, motion, crowd",
+  "steps": [
+   "Read SPEC.md §12",
+   "Present"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F082",
+  "tier": "core",
+  "category": "art",
+  "description": "Ball token contrast >=4.5:1 against sky/grass/stripe/dirt/stands/wall tokens",
+  "steps": [
+   "vitest contrast test",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F083",
+  "tier": "core",
+  "category": "art",
+  "description": "Zone and pitch marker legible at 390 px; no particle/trail/popup covers ball between release and contact",
+  "steps": [
+   "iPhone screenshot; unit test occlusion rule in fx layer",
+   "Zone >=70 px wide; during release→contact no popup/particle/trail rect overlaps ball rect (fx test over 50 pitches)"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F084",
+  "tier": "polish",
+  "category": "art",
+  "description": "Static layers baked to offscreen canvases (stripes, dirt speckle, stands, vignette, light glow) and redrawn only on resize",
+  "steps": [
+   "verify reads __game.bakeCount before and after 20 s play",
+   "bake count unchanged during play; increments on resize"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F085",
+  "tier": "polish",
+  "category": "art",
+  "description": "Glow sprites pre-rendered, sparks composited with \"lighter\"; no shadowBlur/ctx.filter in src",
+  "steps": [
+   "check script grep",
+   "0 occurrences"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F086",
+  "tier": "polish",
+  "category": "art",
+  "description": "Characters from capsules/ellipses with outline + cel highlight; procedural idle, windup, swing, follow-through, celebrate",
+  "steps": [
+   "Unit test pose function for windup/swing/follow/celebrate/idle at t=0 and t=1; screenshots",
+   "Poses differ (limb angles change ≥20°); 5 silhouettes have distinct scale/torso params"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F087",
+  "tier": "polish",
+  "category": "art",
+  "description": "12 base characters with distinct silhouettes, ratings, traits, catchphrases",
+  "steps": [
+   "Unit test roster data validity (12 base + 4 unlock, unique names, ratings 0–10, 2–4 pitches)",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F088",
+  "tier": "polish",
+  "category": "art",
+  "description": "Fonts loaded via document.fonts.ready with 1.5 s timeout before canvas text",
+  "steps": [
+   "verify with fonts route aborted",
+   "game reaches play within 2 s after font timeout; no errors"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F089",
+  "tier": "polish",
+  "category": "art",
+  "description": "Riso look applied to menus, scoreboard (ticket stub), results; misregistration jolt on big hits",
+  "steps": [
+   "Grep CSS uses theme variables only; screenshots",
+   "No hex colours in ui CSS outside theme; screenshots reviewed in progress.md"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F090",
+  "tier": "polish",
+  "category": "art",
+  "description": "2.5D perspective projection with ground shadows for ball and fielders",
+  "steps": [
+   "Unit test project(): point on camera axis maps to centre; farther point smaller scale",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F091",
+  "tier": "polish",
+  "category": "personality",
+  "description": "PA chatter bank of 40+ situational lines, never repeats back-to-back",
+  "steps": [
+   "Unit test bank size and no consecutive repeat over 500 draws",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F092",
+  "tier": "polish",
+  "category": "personality",
+  "description": "Broadcast lower thirds, walk-up flourish, catchphrases, scoreboard with attitude",
+  "steps": [
+   "verify: lowerThird in render_game_to_text at PA start; screenshot",
+   "lowerThird.name equals batter; catchphrase non-empty"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F093",
+  "tier": "polish",
+  "category": "personality",
+  "description": "Momentum hot/cold icons on nameplates; pressure bar on scoreboard",
+  "steps": [
+   "Unit test momentum; screenshot",
+   "Icons render; pressure value in render_game_to_text"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F094",
+  "tier": "polish",
+  "category": "flow",
+  "description": "Title attract loop of CPU-vs-CPU at-bats behind logo",
+  "steps": [
+   "verify title screenshot after 3 s",
+   "attract pitches counted >0"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F095",
+  "tier": "polish",
+  "category": "feel",
+  "description": "Squash/stretch ball at contact and in flight, mitt squash, 12-point tapered trail",
+  "steps": [
+   "Unit test ball squash keeps area (sx*sy≈1 ±0.02); trail ring holds exactly 12 points",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F096",
+  "tier": "polish",
+  "category": "feel",
+  "description": "Popups (150 ms in, 40 px drift, 500 hold, 200 fade), button press scale 0.94, 250 ms transitions with 40 ms stagger",
+  "steps": [
+   "Unit test popup timeline total <1 s",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F097",
+  "tier": "polish",
+  "category": "feel",
+  "description": "Home-run replay rendered from snapshot ring buffer (3 s) as inset within celebration",
+  "steps": [
+   "verify forced HR",
+   "replay.active true during celebration; replay frame count ≥ 240 from ring"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F098",
+  "tier": "polish",
+  "category": "feel",
+  "description": "?debug=1 tuning slider panel live-edits main feel numbers",
+  "steps": [
+   "verify debug panel exists",
+   "panel has >=6 sliders"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F099",
+  "tier": "polish",
+  "category": "progression",
+  "description": "Versioned localStorage save with migrations, try/catch, memory fallback",
+  "steps": [
+   "Unit test migration v0->v1 and throwing storage",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F100",
+  "tier": "polish",
+  "category": "progression",
+  "description": "Settings persist across reload",
+  "steps": [
+   "verify: change setting, reload",
+   "Setting retained"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F101",
+  "tier": "polish",
+  "category": "progression",
+  "description": "Copy/paste save code (base64 JSON) and reset",
+  "steps": [
+   "Unit test roundtrip; verify buttons exist",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F102",
+  "tier": "polish",
+  "category": "progression",
+  "description": "Achievements unlock 4 characters, The Gutter stadium, ball trails; no currency",
+  "steps": [
+   "Unit test: 10 HR unlocks Sir Relish, 25 PERFECT Bleep, Clutch win Spooky, Mill ≥3000 Big Mama, a 400+ ft HR The Gutter; trails unlock; no currency fields in save",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F103",
+  "tier": "polish",
+  "category": "progression",
+  "description": "Local leaderboards: longest HR, best Mill, highest EV, longest PERFECT streak, Clutch wins",
+  "steps": [
+   "Unit test top-5 insert/sort for all 5 boards with HEAT multiplier applied to scores",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F104",
+  "tier": "polish",
+  "category": "modes",
+  "description": "The Gutter unlockable stadium with 38-ft Mailbox wall short porch",
+  "steps": [
+   "Unit test Gutter fence: +30° 290–300 ft at 38 ft; 100 mph 25° pulled to RF hits wall below 38 ft => rebound",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F105",
+  "tier": "core",
+  "category": "ios",
+  "description": "Viewport meta (viewport-fit=cover), dvh, visualViewport resize, safe-area padding, full-bleed field",
+  "steps": [
+   "verify with injected safe-area padding CSS vars",
+   "meta present; all HUD button rects inside viewport minus insets"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F106",
+  "tier": "core",
+  "category": "ios",
+  "description": "touch-action none, overscroll none, fixed body, no select/callout, preventDefault touchmove/gesturestart/dblclick passive:false",
+  "steps": [
+   "Inspect + verify page does not scroll on touch drag",
+   "scrollY stays 0"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F107",
+  "tier": "core",
+  "category": "ios",
+  "description": "Portrait primary layout and a real landscape layout (no rotate wall)",
+  "steps": [
+   "Screenshots both orientations",
+   "HUD and zone laid out per orientation"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F108",
+  "tier": "core",
+  "category": "ios",
+  "description": "Canvas backing store CSS×min(dpr,2)",
+  "steps": [
+   "verify canvas.width on iPhone (dpr 3)",
+   "width == cssWidth*2"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F109",
+  "tier": "core",
+  "category": "ios",
+  "description": "visibilitychange hidden pauses sim and suspends audio; visible/pageshow shows tap-to-resume overlay",
+  "steps": [
+   "verify dispatch visibility events",
+   "paused true; overlay present"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F110",
+  "tier": "polish",
+  "category": "ios",
+  "description": "Silent-mode setting: off => audioSession.type ambient; on => playback + silent audio element unlock; feature-detected",
+  "steps": [
+   "Unit test with mocked navigator.audioSession and none",
+   "ambient when off, playback when on; no throw when API missing"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F111",
+  "tier": "polish",
+  "category": "ios",
+  "description": "Haptics (experimental) setting off by default using switch-checkbox trick in touch handler; navigator.vibrate only where exists",
+  "steps": [
+   "Unit test haptics with fake DOM: off => no element; on => label click invoked inside handler",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F112",
+  "tier": "polish",
+  "category": "ios",
+  "description": "manifest.webmanifest standalone + theme colours, apple-mobile-web-app tags, generated apple-touch-icon PNGs via script, storage.persist() when standalone",
+  "steps": [
+   "Run icon script; verify dist",
+   "icons 180/192/512 PNG exist with right sizes; manifest parses with display standalone"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F113",
+  "tier": "core",
+  "category": "build",
+  "description": "npm run build => dist/ with base ./; npm run build:single => one self-contained dist-single/index.html that plays from file://",
+  "steps": [
+   "verify opens dist-single via file:// and swings",
+   "No errors; state changes"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F114",
+  "tier": "polish",
+  "category": "accessibility",
+  "description": "Every menu keyboard-navigable (Tab/arrows/Enter/Esc); Esc/P pause, M mute, F fullscreen desktop",
+  "steps": [
+   "verify keyboard-only flow title→Short Run→pitch swing (Space)→Esc pause→Enter resume→M mute",
+   "each step changes state"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F115",
+  "tier": "polish",
+  "category": "accessibility",
+  "description": "Touch targets >=44 px; left-handed setting mirrors POWER/STAR chips",
+  "steps": [
+   "verify: all button rects in render_game_to_text",
+   "every rect w,h ≥44 css px; left-handed setting mirrors POWER/STAR x about centre"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F116",
+  "tier": "core",
+  "category": "testability",
+  "description": "Bot balance: perfect-timing Rookie bot homers often but not always; random-timing bot rarely reaches base; 3-inning game pitch count plausible",
+  "steps": [
+   "vitest bot prints numbers",
+   "HR rate 25–85%; random OBP <0.2; pitches 40–160"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F117",
+  "tier": "core",
+  "category": "testability",
+  "description": "Verify scenarios cover PERFECT/EARLY/LATE/WHIFF reachable, homer slow-mo, throw prompt tap+key, inning change, mercy, game over→restart, derby streak, handoff, visibility pause, settings persist, reduced motion",
+  "steps": [
+   "npm run verify",
+   "All scenarios pass on 3 viewports"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F118",
+  "tier": "core",
+  "category": "testability",
+  "description": "Screenshots saved per milestone and reviewed in progress.md",
+  "steps": [
+   "node script lists artifacts/screens/<latest>",
+   "all 12 named screenshots × 3 viewports exist; progress.md has notes per image"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F119",
+  "tier": "polish",
+  "category": "docs",
+  "description": "README: how to play, controls, deploy dist/, tuning via tuning.ts and ?debug=1",
+  "steps": [
+   "Read README",
+   "Covers play, controls (touch+keys), deploy dist/, tuning.ts and ?debug=1"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F120",
+  "tier": "polish",
+  "category": "docs",
+  "description": "CLAUDE.md short with exact commands and sim/render rule",
+  "steps": [
+   "Read",
+   "≤40 lines with dev/test/check/verify/build commands and the sim/render rule"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F121",
+  "tier": "core",
+  "category": "difficulty",
+  "description": "HEAT slider 0–99 per player in setup; tier defaults 0/50/99; sweep is monotonic with no steps",
+  "steps": [
+   "Unit test sweep HEAT 0..99 for flight time, window multiplier, CPU sd",
+   "Each strictly monotonic; max step between neighbours <2%; HEAT 0/50/99 flight = 0.85/0.65/0.50 s"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F122",
+  "tier": "core",
+  "category": "difficulty",
+  "description": "Tier selection (Rookie/Pro/All-Star) in setup changes inputs only",
+  "steps": [
+   "verify select each tier; unit test same timing grades equal across tiers for centred pitch",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F123",
+  "tier": "core",
+  "category": "difficulty",
+  "description": "Score multiplier 1+1.5·HEAT/99; hide-locator expert option off by default ×1.25",
+  "steps": [
+   "Unit test multiplier; check default settings",
+   "HEAT 99 => 2.5; hidden => ×1.25; default hideLocator=false"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F124",
+  "tier": "core",
+  "category": "batting",
+  "description": "Pitch locator marker appears at 40% of flight at predicted crossing point, when enabled",
+  "steps": [
+   "verify: state at 30% and 50% of flight",
+   "locator null at 30%, set within 0.05 ft of final crossing at 50%"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F125",
+  "tier": "core",
+  "category": "running",
+  "description": "Conservative/Aggressive setting changes advance thresholds",
+  "steps": [
+   "Unit test same play under both settings",
+   "Aggressive takes extra base at margin 0.2; Conservative holds"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F126",
+  "tier": "core",
+  "category": "running",
+  "description": "Tag-ups and sac flies: runner on 3rd tags on deep fly with <2 outs",
+  "steps": [
+   "Unit test fly 320 ft with runner on 3rd, 1 out",
+   "Run scores; batter out; text \"Sac fly\""
+  ],
+  "passes": false
+ },
+ {
+  "id": "F127",
+  "tier": "polish",
+  "category": "traits",
+  "description": "Character traits apply exactly: Moonshot +3 EV PERFECT, Pesky +8% windows, Buddy +6% with partner in lineup, Streaky ×1.05 when hot, Clutch +6% on Star Chance, Burner always Aggressive",
+  "steps": [
+   "Unit test each trait",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F128",
+  "tier": "core",
+  "category": "build",
+  "description": "Build audit: no image/audio files in dist besides generated icons; no framework deps; no AudioWorklet/Worker/dynamic import() in src",
+  "steps": [
+   "node script over dist and src",
+   "0 findings"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F129",
+  "tier": "stretch",
+  "category": "modes",
+  "description": "Desktop shared-keyboard duel (one batter, one pitcher)",
+  "steps": [
+   "verify two-key duel",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F130",
+  "tier": "stretch",
+  "category": "modes",
+  "description": "Moonshot Mill elimination bracket for 4+ players",
+  "steps": [
+   "Unit test bracket progression",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F131",
+  "tier": "stretch",
+  "category": "progression",
+  "description": "Collectible card binder screen with earned cards",
+  "steps": [
+   "verify binder screenshot",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F132",
+  "tier": "stretch",
+  "category": "progression",
+  "description": "Bat skins unlockable and visible",
+  "steps": [
+   "Screenshot",
+   "Pass"
+  ],
+  "passes": false
+ },
+ {
+  "id": "F133",
+  "tier": "stretch",
+  "category": "modes",
+  "description": "Lighthouse Point stadium with sweeping beam hazard",
+  "steps": [
+   "Screenshot + fence unit test",
+   "Pass"
+  ],
+  "passes": false
+ }
+]

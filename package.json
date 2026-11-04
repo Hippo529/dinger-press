@@ -1,0 +1,24 @@
+{
+  "name": "dinger-press",
+  "version": "0.1.0",
+  "scripts": {
+    "test": "vitest run",
+    "dev": "vite --host",
+    "build": "vite build",
+    "build:single": "vite build --mode single",
+    "preview": "vite preview --port 4173 --strictPort",
+    "check": "node scripts/check.mjs",
+    "verify": "vite build && node scripts/verify.mjs",
+    "icons": "node scripts/icons.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "playwright": "1.63.0",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "vite-plugin-singlefile": "2.3.4",
+    "vitest": "5.1.0"
+  },
+  "private": true,
+  "type": "module"
+}
