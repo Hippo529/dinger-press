@@ -1416,7 +1416,7 @@
    "verify two-key duel",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F130",

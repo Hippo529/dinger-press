@@ -85,7 +85,9 @@ export class Input {
     if (s.phase === 'handoff') return this.emit({ type: 'ready' }, ms);
     const hb = humanBatter(s), hp = humanPitcher(s);
     const batPhase = s.phase === 'pitch';
-    if (hb !== null && (batPhase || s.phase === 'prePitch' || s.phase === 'windup')) {
+    // Desktop duel: both sides human → the mouse belongs to the pitcher, Space to the batter.
+    const mouseIsPitcher = hb !== null && hp !== null && e.pointerType === 'mouse';
+    if (hb !== null && !mouseIsPitcher && (batPhase || s.phase === 'prePitch' || s.phase === 'windup')) {
       const tier = activeTier(s);
       if (tier === 'allstar') {
         if (e.pointerType === 'mouse') {

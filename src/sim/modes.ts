@@ -99,6 +99,14 @@ export function proof(o: CommonOpts): ModeConfig {
   return cfg;
 }
 
+/** Desktop duel (shared keyboard): P1 bats with Space while P2 pitches with the mouse; roles swap each half. */
+export function duel(o: CommonOpts): ModeConfig {
+  const cfg = base(o, 'short', draftTeams(o));
+  cfg.humanBat = [0, 1];
+  cfg.humanPitch = [1, 0];
+  return cfg;
+}
+
 /** Moonshot Mill: each player swings with their own character until 10 outs. */
 export function mill(o: CommonOpts & { chars: string[]; outs?: number; bracket?: boolean }): ModeConfig {
   const t = draftTeams(o);

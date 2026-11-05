@@ -243,3 +243,33 @@ m5.push({
     h.expect(st === 'lighthouse', 'Lighthouse Point in play');
   },
 });
+
+m5.push({
+  name: 'desktop-duel',
+  viewports: ['desktop'],
+  async run(h) {
+    await h.open('test=1&seed=53');
+    await h.page.evaluate(() => localStorage.setItem('dingerpress.save', JSON.stringify({ v: 2, settings: {}, flags: { firstRunDone: true }, stats: { pitchesSeen: 10 } })));
+    await h.page.reload();
+    await h.page.waitForFunction(() => window.__ready === true);
+    await h.press((await h.state()).buttons.find((b) => b.id === 'ui:play'));
+    await h.advance(20);
+    await h.press((await h.state()).buttons.find((b) => b.id === 'ui:mode-duel'));
+    await h.advance(20);
+    let s = await h.until((x) => x.phase === 'prePitch', { label: 'prePitch' });
+    h.expect(s.humanBatting && s.humanPitching, 'both sides human');
+    const zc = await h.game(() => window.__game.app.renderer.layout.plane);
+    await h.page.keyboard.press('2'); // P2 picks a pitch
+    await h.page.mouse.move(zc.cx, zc.cy);
+    await h.page.mouse.down();
+    await h.advance(720);
+    await h.page.mouse.up();
+    s = await h.until((x) => x.phase === 'pitch', { label: 'P2 pitched with the mouse' });
+    h.expect(s.charge.quality === 'perfect' && s.pitchSel === 1, 'mouse hold/release pitch: ' + JSON.stringify(s.charge));
+    await helpers.toContactMoment(h, 0);
+    await h.page.keyboard.press('Space'); // P1 swings
+    await h.advance(30);
+    s = await h.state();
+    h.expect(s.last.grade, 'Space swung for P1: ' + s.last.grade);
+  },
+});

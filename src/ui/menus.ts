@@ -39,6 +39,7 @@ export interface UiHost {
   previewClutch(card: ClutchSpec): void;
   pendingCard(): ClutchSpec | null;
   startCage(pitch: PitchType | 'mix'): void;
+  startDuel(): void;
   resume(): void;
   restart(): void;
   quit(): void;
@@ -84,6 +85,7 @@ export function buildScreen(id: ScreenId, host: UiHost): HTMLElement {
           card('PASS THE PROOF', 'Two players, one phone. Each bats their own half.', '⇄', () => host.go('proof'), '', 'mode-proof'),
           card('CLUTCH CARDS', "Half-inning scenarios + Today's Edition.", '♣', () => host.go('clutch'), '', 'mode-clutch'),
           card('THE CAGE', 'Practice. No outs. Millisecond readout.', '◎', () => host.go('cage'), '', 'mode-cage'),
+          card('DESKTOP DUEL', 'Shared keyboard: P1 swings with Space, P2 pitches with the mouse.', '⌨', () => host.startDuel(), '', 'mode-duel'),
           el('div', { class: 'row' }, btn('Setup', () => host.go('setup'), 'small teal', false, 'setup'), btn('Back', () => host.back(), 'small', false, 'back')),
         ),
       );

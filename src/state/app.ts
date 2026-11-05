@@ -13,7 +13,7 @@ import { Renderer } from '../render/renderer';
 import { drawPrompt, drawTicker } from '../render/overlays';
 import { THEME } from '../config/theme';
 import { SaveStore, type StorageLike } from '../save/save';
-import { attract, cage, clutch, mill, proof, shortRun, type CommonOpts } from '../sim/modes';
+import { attract, cage, clutch, duel, mill, proof, shortRun, type CommonOpts } from '../sim/modes';
 import type { ClutchSpec, ModeConfig } from '../sim/state';
 import type { Action, PitchType, SimEvent } from '../sim/types';
 import { buildScreen, type PlayerSetup, type ResultsData, type ScreenId, type UiHost } from '../ui/menus';
@@ -155,6 +155,10 @@ export class App implements InputHost, UiHost {
   }
   startCage(pitch: PitchType | 'mix'): void {
     this.begin(cage({ ...this.common(), pitch, firstEver: false }));
+  }
+  startDuel(): void {
+    const st = this.save.data.settings;
+    this.begin(duel({ ...this.common(), players: [{ name: 'P1', heat: st.heat, tier: 'rookie' }, { name: 'P2', heat: st.heat, tier: 'rookie' }], firstEver: false }));
   }
   restart(): void {
     if (this.lastCfg) this.begin({ ...this.lastCfg, seed: this.nextSeed(), firstEver: false, newbiePitchesLeft: Math.max(0, 3 - this.save.data.stats.pitchesSeen) });
