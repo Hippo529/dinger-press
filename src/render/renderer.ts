@@ -188,7 +188,9 @@ export class Renderer {
     const items: Item[] = [];
     const add = (x: number, y: number, z: number, ch: string | null, uni: { main: string; trim: string }, pose: Pose) => {
       project(cam, x, y, z, PJ);
-      if (PJ.depth < 3) return;
+      // While the camera blends out from the plate, anything right in front of the lens (batter, catcher)
+      // would fill the screen: skip it in the field view.
+      if (PJ.depth < (this.view === 'field' ? 30 : 3)) return;
       const px = PJ.x, py = PJ.y, ps = PJ.s, d = PJ.depth;
       items.push({ d, draw: () => drawCharacter(ctx, px, py, ps, ch ? ROSTER_BY_ID[ch] : null, uni, pose, now) });
     };
@@ -220,7 +222,8 @@ export class Renderer {
       let pose: Pose = { kind: 'stance', t: now, facing: hand === 1 ? 1 : -1, back: this.view === 'bat', power: s.power };
       if (sw) pose = { kind: 'swing', t: 0.42 + Math.max(0, rt - sw.t) / 0.2, facing: hand === 1 ? 1 : -1, back: this.view === 'bat', power: s.power };
       if (s.phase === 'dead' && s.banner?.text === 'STRIKEOUT') pose = { kind: 'slump', t: now, facing: hand === 1 ? 1 : -1, back: this.view === 'bat' };
-      if (this.view === 'bat') {
+      project(cam, hand === 1 ? -2.7 : 2.7, 0.3, 0, PJ);
+      if (this.view === 'bat' || PJ.depth < 30) {
         // Arcade cheat: the batter stands at the same depth as the zone, so true scale would cover the
         // pitcher. Draw at a reduced scale, nudged toward the screen edge.
         project(cam, hand === 1 ? -3.0 : 3.0, 0.3, 0, PJ);

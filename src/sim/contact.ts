@@ -124,7 +124,8 @@ export function contactOut(g: Grade, c: ContactCtx, w: Windows): ContactOut {
       const q = clamp01((Math.abs(o) - w.good) / Math.max(1, w.foulFrom - w.good));
       ev = lerp(76, 64, q);
       la = lerp(14, -10, q);
-      spray = h * Math.sign(rel || (g === 'EARLY' ? -1 : 1)) * Math.max(Math.abs(spray), 32);
+      // weak early/late contact is pulled/sliced wider the further off it is; the outer part goes foul
+      spray = h * Math.sign(rel || (g === 'EARLY' ? -1 : 1)) * Math.max(Math.abs(spray), lerp(32, 52, q));
       break;
     }
     case 'JAMMED':

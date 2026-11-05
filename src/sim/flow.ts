@@ -269,14 +269,20 @@ function tiebreakSwingUsed(c: Ctx, hr: boolean): void {
 
 function homerSwingUsed(c: Ctx, hr: boolean): void {
   const s = c.s;
+  const cl = s.cfg.clutch!;
+  const need = cl.homersNeeded ?? 1;
   s.clutchSwings++;
+  const left = (cl.homerSwings ?? 3) - s.clutchSwings;
   if (hr) {
-    c.emit({ type: 'homeRun', dist: s.last.dist, walkoff: true });
-    finishClutch(c, true);
+    s.clutchHomers++;
+    const done = s.clutchHomers >= need;
+    c.emit({ type: 'homeRun', dist: s.last.dist, walkoff: done });
+    banner(c, 'HOME RUN', done ? 'Card cleared!' : `${need - s.clutchHomers} more · ${left} swing${left === 1 ? '' : 's'} left`, 'good');
+    if (done) finishClutch(c, true);
+    else if (left <= 0) finishClutch(c, false);
     return setPhase(c, 'celebrate');
   }
-  const left = (s.cfg.clutch!.homerSwings ?? 3) - s.clutchSwings;
-  banner(c, 'NO DINGER', `${left} swing${left === 1 ? '' : 's'} left`, 'bad');
+  banner(c, 'NO DINGER', `${need - s.clutchHomers} to go · ${left} swing${left === 1 ? '' : 's'} left`, 'bad');
   if (left <= 0) finishClutch(c, false);
   goDead(c, TUNING.flow.afterTakeS, false);
 }

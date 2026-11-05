@@ -32,13 +32,14 @@ export class Input {
   private spaceCharging = false;
   log: { type: string; t: number }[] = [];
 
-  constructor(private host: InputHost, target: HTMLElement) {
-    target.addEventListener('pointerdown', (e) => this.down(e));
-    target.addEventListener('pointermove', (e) => this.move(e));
-    target.addEventListener('pointerup', (e) => this.up(e));
-    target.addEventListener('pointercancel', (e) => this.up(e));
-    window.addEventListener('keydown', (e) => this.key(e, true));
-    window.addEventListener('keyup', (e) => this.key(e, false));
+  constructor(private host: InputHost, target: EventTarget, keyTarget: EventTarget = window) {
+    // Pointer Events only; acting on pointerdown. There is deliberately no 'click' listener.
+    target.addEventListener('pointerdown', (e) => this.down(e as PointerEvent));
+    target.addEventListener('pointermove', (e) => this.move(e as PointerEvent));
+    target.addEventListener('pointerup', (e) => this.up(e as PointerEvent));
+    target.addEventListener('pointercancel', (e) => this.up(e as PointerEvent));
+    keyTarget.addEventListener('keydown', (e) => this.key(e as KeyboardEvent, true));
+    keyTarget.addEventListener('keyup', (e) => this.key(e as KeyboardEvent, false));
   }
 
   private emit(a: Action, eventMs: number): void {

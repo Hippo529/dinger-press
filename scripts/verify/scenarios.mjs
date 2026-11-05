@@ -2,6 +2,7 @@
 import { helpers } from './lib.mjs';
 import { m2 } from './m2.mjs';
 import { m3 } from './m3.mjs';
+import { m5 } from './m5.mjs';
 
 export const scenarios = [
   {
@@ -127,4 +128,5 @@ export const scenarios = [
   },
   ...m2,
   ...m3,
+  ...m5,
 ];

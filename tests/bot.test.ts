@@ -5,6 +5,9 @@ import { chooseThrow } from '../src/sim/fielding';
 import type { ModeConfig } from '../src/sim/state';
 import type { SimEvent } from '../src/sim/types';
 
+/** Vitest 5 hides console output of passing tests; balance numbers must always print. */
+const report = (...a: unknown[]) => process.stdout.write('\n' + a.join(' ') + '\n');
+
 const DT = 1 / 120;
 const P = (heat = 0) => [{ name: 'Bot', heat, tier: 'rookie' as const }];
 
@@ -121,10 +124,10 @@ describe('bot balance', () => {
     }
     const hrRate = P1.hr / P1.swings, obp = R.onBase / Math.max(1, R.pa);
     const max = (a: number[]) => (a.length ? Math.max(...a) : 0);
-    console.log(`BOT perfect Rookie: ${P1.hr} HR / ${P1.swings} swings = ${(hrRate * 100).toFixed(1)}%  (PA ${P1.pa})`);
-    console.log(`BOT random timing: on base ${R.onBase} / ${R.pa} PA = ${obp.toFixed(3)}`);
-    console.log(`BOT human-like HEAT 50: pitches per full 3-inning game = ${fullGames.join(', ')}`);
-    console.log(`BOT dead time max: take→windup ${max([...P1.takeToWindup, ...R.takeToWindup, ...M.takeToWindup]).toFixed(2)} s, dead→ready ${max([...P1.deadToReady, ...M.deadToReady]).toFixed(2)} s, HR→ready ${max([...P1.hrToReady, ...M.hrToReady]).toFixed(2)} s`);
+    report(`BOT perfect Rookie: ${P1.hr} HR / ${P1.swings} swings = ${(hrRate * 100).toFixed(1)}%  (PA ${P1.pa})`);
+    report(`BOT random timing: on base ${R.onBase} / ${R.pa} PA = ${obp.toFixed(3)}`);
+    report(`BOT human-like HEAT 50: pitches per full 3-inning game = ${fullGames.join(', ')}`);
+    report(`BOT dead time max: take→windup ${max([...P1.takeToWindup, ...R.takeToWindup, ...M.takeToWindup]).toFixed(2)} s, dead→ready ${max([...P1.deadToReady, ...M.deadToReady]).toFixed(2)} s, HR→ready ${max([...P1.hrToReady, ...M.hrToReady]).toFixed(2)} s`);
     expect(hrRate).toBeGreaterThan(0.25);
     expect(hrRate).toBeLessThan(0.85);
     expect(obp).toBeLessThan(0.2);

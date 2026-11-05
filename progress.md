@@ -429,3 +429,33 @@ Screenshots (M3):
 - cage-*: four pitch types with their trail tints. KN shows the flutter seam-less ball; CU's sun trail reads well. The ball's ground shadow leads it, which is correct perspective, not a bug.
 - walk-up-*: the first capture caught the lower third mid-slide (a dark box at the edge). The scenario now waits 350 ms.
 Next: M4 art pass (pitcher/fielder poses on throws, stadium variety, menus polish), then M5 modes UI (Mill/Proof handoff scenarios, derby streak, Clutch card intro), with F056 revisited there.
+
+## M4–M6 — art pass, modes UI, hardening, builds
+Done:
+- Clutch Card intro screen (situation + win condition).
+- Mill pass-and-play with handoffs and results; binder screen.
+- Generated icons: `npm run icons` renders canvas code in Chromium to 180/192/512 PNGs.
+- `npm run audit` (build audit, also a unit test); `npm run screens` (12 named screenshots × 3 viewports).
+- Single-file build plays from file://; README.
+- Input layer takes an injectable key target, with unit tests in Node: pointerdown→swing with timeStamp, click ignored, HUD rects → actions, WASD/Shift/E, input buffered through hit-stop applied exactly once.
+- Fielding audit over 30 CPU-vs-CPU-fielded games: 675 balls in play, 360 throws, 0 violations. The first version reported 21 false violations: a double-play pivot is chosen in the same step the lead runner is retired, and the audit's snapshot predated that out.
+- Vitest 5 hides console output of passing tests, so the bot numbers now print through process.stdout.
+Visual fixes from the contact sheets (artifacts/screens/M6):
+- During the 0.35 s blend to the field camera, the batter and catcher were drawn at true scale right in front of the lens (giant figures in homer-slowmo). Now: the catcher is hidden within 30 ft of the camera, and the batter uses the batting-view cheat scale whenever they are that close.
+- Landscape: the grade popup collided with the scoreboard and pause button. The banner/popup row moves to ≥ 30% height in landscape.
+- DOM screenshots were taken mid-fade (translucent panels). `h.shot` now waits out the ≤ 400 ms transition.
+Clutch Cards (F056): still open, now with the root cause. Card designs were reworked twice: cards start with 0–1 outs, pitching cards tolerate a run, Small Ball replaces Squeeze It, Two-Strike Grind needs 2 runs, Moonshot needs 2 HR in 8 swings. Weak early/late contact now fouls off more often. The bot median went 13 → 31 → 34 s. The probe across 3 seeds × 8 cards shows why: a complete three-out half-inning at this game's pace is 6–12 pitches = 24–54 s, so a "half-inning scenario" cannot reach a 60–90 s median without slowing every half-inning in every mode. That conflicts with "all modes are short" and the dead-time guardrails. I'm leaving the entry failing and the band unchanged; it is listed as a known issue for a human call.
+Evidence: `npm test` 117/118 (F056 only); check 0 violations; audit 0 findings; `VERIFY: 76/76 scenarios, 0 page errors, 0 console errors, screenshots: artifacts/screens/M6`; `npm run screens -- M6` → 36/36.
+Per-screenshot notes (M6, all three viewports unless noted):
+- title-attract: logo over a live CPU at-bat. Landscape fits after the dvh logo sizing. Desktop leaves a lot of empty field, which is fine behind a menu.
+- first-pitch: meatball cue, lower third, zone ~120 px (portrait) / ~96 px (landscape) wide. Landscape's pulsing cue sits over the pitcher.
+- perfect-freeze: ball at the plate with sparks and "107 mph · 424 ft". In landscape the popup sits clear of the scoreboard after the fix; the EV sub-line touches the pitcher's head.
+- homer-slowmo: after the fix the batter stays in stance and the ball heads out over the pitcher. It's a forced contact in the test, so no swing pose is shown.
+- throw-prompt: the base diamond is clear and big; the field view reads as a printed diagram.
+- inning-transition: "END OF TOP 1" banner plus the GUS ticker, which truncates long lines with an ellipsis.
+- game-over: MERCY stamp, line score readable, unlock cards stack below. Desktop shows the attract game dimmed behind the panel.
+- derby-results: both players listed with scores; the HEAT multiplier is shown in the subtitle.
+- handoff: a full-screen printed "PASS TO P2". It shows "hold on…" for the first 400 ms; plain but unmistakable.
+- settings: panels with segmented controls ≥ 44 px; long, scrolls on phones.
+- binder: base roster cards filled, unearned ones "???"; text-only cards (stretch tier, minimal art).
+- clutch-intro: stamp title, situation table, goal and PLAY CARD; readable at 402 px.

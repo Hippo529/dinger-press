@@ -17,6 +17,9 @@ import { cfgShort } from './sim.test';
 import { botGame, humanish } from './bot.test';
 import type { Runner } from '../src/sim/types';
 
+/** Vitest 5 hides console output of passing tests; balance numbers must always print. */
+const report = (...a: unknown[]) => process.stdout.write('\n' + a.join(' ') + '\n');
+
 const fresh = (seed = 1) => {
   const sim = new Sim(cfgShort(seed));
   return { sim, s: sim.s, c: sim.ctx };
@@ -363,7 +366,7 @@ describe('modes', () => {
       for (const e of sim.drainEvents()) if (e.type === 'handoff' && !inTb && !sim.s.tiebreak) handoffs++;
     }
     expect(sim.s.phase).toBe('gameOver');
-    console.log(`BOT proof: ${halves.size} halves, ${handoffs} handoffs, reason ${sim.s.overReason}`);
+    report(`BOT proof: ${halves.size} halves, ${handoffs} handoffs, reason ${sim.s.overReason}`);
     expect(handoffs).toBe(halves.size - 1);
     expect(Math.max(...flights[1])).toBeLessThan(Math.min(...flights[0]));
     void stats;
@@ -380,7 +383,7 @@ describe('modes', () => {
     }
     durs.sort((a, b) => a - b);
     const med = (durs[3] + durs[4]) / 2;
-    console.log('BOT clutch durations (s):', durs.map((d) => d.toFixed(0)).join(', '), 'median', med.toFixed(0));
+    report('BOT clutch durations (s):', durs.map((d) => d.toFixed(0)).join(', '), 'median', med.toFixed(0));
     expect(med).toBeGreaterThanOrEqual(45);
     expect(med).toBeLessThanOrEqual(110);
   });

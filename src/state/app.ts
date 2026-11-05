@@ -145,6 +145,14 @@ export class App implements InputHost, UiHost {
   startClutch(card: ClutchSpec): void {
     this.begin(clutch({ ...this.common(), firstEver: false }, card));
   }
+  private pending: ClutchSpec | null = null;
+  previewClutch(card: ClutchSpec): void {
+    this.pending = card;
+    this.go('clutchIntro');
+  }
+  pendingCard(): ClutchSpec | null {
+    return this.pending;
+  }
   startCage(pitch: PitchType | 'mix'): void {
     this.begin(cage({ ...this.common(), pitch, firstEver: false }));
   }

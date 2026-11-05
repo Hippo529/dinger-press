@@ -121,12 +121,12 @@ const B = (a: boolean, b: boolean, c: boolean): [boolean, boolean, boolean] => [
 export const CLUTCH_CARDS: ClutchSpec[] = [
   { id: 'walkoff', title: 'Walk It Off', blurb: 'Down 2, runner on first, nobody out. Score three and walk it off.', side: 'bat', inning: 3, half: 1, outs: 0, balls: 0, strikes: 0, bases: B(true, false, false), scoreHuman: 3, scoreCpu: 5, runs: 3 },
   { id: 'protect', title: 'Protect the Lead', blurb: 'Up two in the last inning. Three outs, one run max.', side: 'pitch', inning: 3, half: 0, outs: 0, balls: 0, strikes: 0, bases: B(false, false, false), scoreHuman: 3, scoreCpu: 1, runs: 1 },
-  { id: 'squeeze', title: 'Squeeze It', blurb: 'Tied. Runner on second, nobody out. Bring him home.', side: 'bat', inning: 3, half: 1, outs: 0, balls: 0, strikes: 0, bases: B(false, true, false), scoreHuman: 2, scoreCpu: 2, runs: 1 },
+  { id: 'smallball', title: 'Small Ball', blurb: 'Tied, bases empty, nobody out. Manufacture one run.', side: 'bat', inning: 3, half: 1, outs: 0, balls: 0, strikes: 0, bases: B(false, false, false), scoreHuman: 2, scoreCpu: 2, runs: 1 },
   { id: 'strand', title: "Strand 'Em", blurb: 'Bases loaded, nobody out, up three. Allow two at most.', side: 'pitch', inning: 2, half: 0, outs: 0, balls: 0, strikes: 0, bases: B(true, true, true), scoreHuman: 5, scoreCpu: 2, runs: 2 },
-  { id: 'moonshot', title: 'Moonshot or Bust', blurb: 'Down one. Five swings to hit one out.', side: 'bat', inning: 3, half: 1, outs: 0, balls: 0, strikes: 0, bases: B(false, false, false), scoreHuman: 1, scoreCpu: 2, runs: 1, homerSwings: 5 },
+  { id: 'moonshot', title: 'Moonshot or Bust', blurb: 'Down one. Two home runs in eight swings.', side: 'bat', inning: 3, half: 1, outs: 0, balls: 0, strikes: 0, bases: B(false, false, false), scoreHuman: 1, scoreCpu: 2, runs: 1, homerSwings: 8, homersNeeded: 2 },
   { id: 'nerves', title: 'Ninth-Inning Nerves', blurb: 'Down three, nobody on, nobody out. Tie it up.', side: 'bat', inning: 3, half: 1, outs: 0, balls: 0, strikes: 0, bases: B(false, false, false), scoreHuman: 1, scoreCpu: 4, runs: 3 },
   { id: 'closebook', title: 'Close the Book', blurb: 'Up three, runners on first and second, nobody out. Three outs, two runs max.', side: 'pitch', inning: 3, half: 0, outs: 0, balls: 0, strikes: 0, bases: B(true, true, false), scoreHuman: 6, scoreCpu: 3, runs: 2 },
-  { id: 'grind', title: 'Two-Strike Grind', blurb: 'Down one, runner on second, one out, 0-2. Grind out the tying run.', side: 'bat', inning: 3, half: 1, outs: 1, balls: 0, strikes: 2, bases: B(false, true, false), scoreHuman: 2, scoreCpu: 3, runs: 1 },
+  { id: 'grind', title: 'Two-Strike Grind', blurb: 'Down two, runner on second, one out, 0-2. Grind out two runs.', side: 'bat', inning: 3, half: 1, outs: 1, balls: 0, strikes: 2, bases: B(false, true, false), scoreHuman: 1, scoreCpu: 3, runs: 2 },
 ];
 
 /** Today's Edition: generated parameters from a YYYYMMDD seed. */

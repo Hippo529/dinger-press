@@ -8,7 +8,7 @@
    "Run each script",
    "Each exits 0 (verify may report failing scenarios but must run)"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F002",
@@ -30,7 +30,7 @@
    "Load ?test=1, parse output",
    "verify asserts listed keys present on title; during a pitch in flight ball.pos is non-null and ball.vel.y<0; tapping the centre of each reported button rect fires its action (D3)"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F004",
@@ -41,7 +41,7 @@
    "Load ?test=1, read state, wait 500 ms real time, read again",
    "State identical; advanceTime(500) changes sim time by 0.5 s"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F005",
@@ -52,7 +52,7 @@
    "verify loads seed=7 twice and plays 3 scripted pitches",
    "JSON outputs equal"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F006",
@@ -228,7 +228,7 @@
    "verify swing early then late",
    "render_game_to_text timingBar.offsetMs sign matches; screenshot shows bar"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F022",
@@ -272,7 +272,7 @@
    "verify toggle via chip tap, then try toggling after release",
    "power true pre-release, unchanged after release; screenshot shows crouched stance"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F026",
@@ -283,7 +283,7 @@
    "verify desktop key presses",
    "Each action changes state as documented"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F027",
@@ -294,7 +294,7 @@
    "Unit test mapper with synthetic events; buffered action applied after hit-stop",
    "pointerdown→swing with same timeStamp; click events ignored; action during hit-stop applied once afterwards"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F028",
@@ -437,7 +437,7 @@
    "vitest bot audit",
    "0 violations"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F041",
@@ -580,7 +580,7 @@
    "verify 2-player derby via debug",
    "handoff state between players; results lists both"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F054",
@@ -602,7 +602,7 @@
    "verify: tap at 100 ms, then at 500 ms",
    "first tap ignored; second advances"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F056",
@@ -701,7 +701,7 @@
    "verify with fresh storage; unit test windows",
    "cue text visible; first pitch centred (|x|<0.1, z mid-zone) and flight >=1.1 s; timingBar hidden before swing; windows ×1.5 on pitches 1–3 and ×1 on 4"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F065",
@@ -888,7 +888,7 @@
    "Read SPEC.md §12",
    "Present"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F082",
@@ -1020,7 +1020,7 @@
    "Unit test momentum; screenshot",
    "Icons render; pressure value in render_game_to_text"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F094",
@@ -1108,7 +1108,7 @@
    "Unit test roundtrip; verify buttons exist",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F102",
@@ -1174,7 +1174,7 @@
    "Screenshots both orientations",
    "HUD and zone laid out per orientation"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F108",
@@ -1229,7 +1229,7 @@
    "Run icon script; verify dist",
    "icons 180/192/512 PNG exist with right sizes; manifest parses with display standalone"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F113",
@@ -1240,7 +1240,7 @@
    "verify opens dist-single via file:// and swings",
    "No errors; state changes"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F114",
@@ -1284,7 +1284,7 @@
    "npm run verify",
    "All scenarios pass on 3 viewports"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F118",
@@ -1295,7 +1295,7 @@
    "node script lists artifacts/screens/<latest>",
    "all 12 named screenshots × 3 viewports exist; progress.md has notes per image"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F119",
@@ -1306,7 +1306,7 @@
    "Read README",
    "Covers play, controls (touch+keys), deploy dist/, tuning.ts and ?debug=1"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F120",
@@ -1317,7 +1317,7 @@
    "Read",
    "≤40 lines with dev/test/check/verify/build commands and the sim/render rule"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F121",
@@ -1339,7 +1339,7 @@
    "verify select each tier; unit test same timing grades equal across tiers for centred pitch",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F123",
@@ -1405,7 +1405,7 @@
    "node script over dist and src",
    "0 findings"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F129",
@@ -1438,7 +1438,7 @@
    "verify binder screenshot",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F132",

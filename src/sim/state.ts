@@ -30,7 +30,8 @@ export interface ClutchSpec {
   /** batting: runs needed this half; pitching: max runs allowed this half */
   runs: number;
   outsToGet?: number; // pitching: outs needed (default 3 − outs)
-  homerSwings?: number; // Moonshot or Bust
+  homerSwings?: number; // Moonshot or Bust: swings allowed
+  homersNeeded?: number; // homers needed within those swings (default 1)
 }
 
 export interface ModeConfig {
@@ -168,6 +169,7 @@ export interface GameState {
   clutchResult: 'win' | 'lose' | null;
   clutchStartRuns: number;
   clutchSwings: number;
+  clutchHomers: number;
   stats: { hr: number; perfect: number; longestHr: number; maxEv: number; ks: number; hits: number; pitchesTotal: number; swings: number };
   ending: boolean;
   handoffTo: number;
@@ -268,6 +270,7 @@ export function createState(cfg: ModeConfig): GameState {
     clutchResult: null,
     clutchStartRuns: 0,
     clutchSwings: 0,
+    clutchHomers: 0,
     stats: { hr: 0, perfect: 0, longestHr: 0, maxEv: 0, ks: 0, hits: 0, pitchesTotal: 0, swings: 0 },
     ending: false,
     handoffTo: -1,

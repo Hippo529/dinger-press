@@ -77,7 +77,7 @@ export function computeLayout(w: number, h: number, insets: Insets, lefty: boole
   const hold = { x: w / 2 - 8 - sh.w, y: bottom - sh.h - 70, ...sh };
   const tbw = Math.min(right - left - 2 * chip, 360);
   const timingBar = { x: w / 2 - tbw / 2, y: portrait ? bottom - chip - 64 : bottom - 52, w: tbw, h: 40 };
-  const banner = { x: left, y: portrait ? h * 0.2 : h * 0.18, w: right - left, h: 92 };
+  const banner = { x: left, y: portrait ? h * 0.2 : Math.max(top + 64, h * 0.3), w: right - left, h: 92 };
   const prompt = { x: left, y: top + scoreboard.h + 36, w: right - left, h: 36 };
   const pad = { x: insets.left, y: top + scoreboard.h + 6, w: w - insets.left - insets.right, h: bottom - (top + scoreboard.h + 6) };
   return { w, h, portrait, insets, lefty, scoreboard, pause, power, star, pitchChips, stamina, throwBtns, send, hold, timingBar, banner, prompt, pad, plane: { cx: w / 2, cy: h / 2, s: 60 } };

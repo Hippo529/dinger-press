@@ -8,8 +8,10 @@
     "build:single": "vite build --mode single",
     "preview": "vite preview --port 4173 --strictPort",
     "check": "node scripts/check.mjs",
-    "verify": "vite build && node scripts/verify.mjs",
-    "icons": "node scripts/icons.mjs"
+    "verify": "vite build && vite build --mode single && node scripts/verify.mjs",
+    "icons": "node scripts/icons.mjs",
+    "audit": "node scripts/audit.mjs",
+    "screens": "node scripts/screens-check.mjs"
   },
   "devDependencies": {
     "@types/node": "26.6.6",

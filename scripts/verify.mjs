@@ -91,7 +91,11 @@ function makeHelpers(page, vp, scenarioName) {
     async advance(ms) { await page.evaluate((m) => window.advanceTime(m), ms); },
     async act(action) { return page.evaluate((a) => window.__game.act(a), action); },
     async game(fn, arg) { return page.evaluate(fn, arg); },
-    async shot(name) { await page.screenshot({ path: `${shotDir}/${name}-${vp.name}.png` }); },
+    async shot(name) {
+      // let DOM screen transitions (≤ 400 ms) finish so menus are captured as people see them
+      if (await page.$('#ui .screen')) await page.waitForTimeout(420);
+      await page.screenshot({ path: `${shotDir}/${name}-${vp.name}.png` });
+    },
     async until(pred, { step = 50, max = 20000, label = 'condition' } = {}) {
       for (let t = 0; t <= max; t += step) {
         const s = await h.state();

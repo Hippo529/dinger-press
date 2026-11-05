@@ -9,7 +9,7 @@ import type { SaveStore } from '../save/save';
 import { arrowNav, btn, el, field, seg, slider, activate } from './dom';
 import { settingsScreen } from './settings';
 
-export type ScreenId = 'title' | 'modes' | 'setup' | 'mill' | 'proof' | 'clutch' | 'cage' | 'pause' | 'settings' | 'results' | 'records' | 'howto' | 'binder' | 'resume';
+export type ScreenId = 'title' | 'modes' | 'setup' | 'mill' | 'proof' | 'clutch' | 'clutchIntro' | 'cage' | 'pause' | 'settings' | 'results' | 'records' | 'howto' | 'binder' | 'resume';
 
 export interface PlayerSetup {
   name: string;
@@ -36,6 +36,8 @@ export interface UiHost {
   startMill(players: PlayerSetup[]): void;
   startProof(players: PlayerSetup[]): void;
   startClutch(card: ClutchSpec): void;
+  previewClutch(card: ClutchSpec): void;
+  pendingCard(): ClutchSpec | null;
   startCage(pitch: PitchType | 'mix'): void;
   resume(): void;
   restart(): void;
@@ -97,8 +99,30 @@ export function buildScreen(id: ScreenId, host: UiHost): HTMLElement {
       return screen('dim',
         el('h2', {}, 'Clutch Cards'),
         el('div', { class: 'col stagger' },
-          card("TODAY'S EDITION", daily.blurb, '☀', () => host.startClutch(daily), host.save.data.flags.dailyDone.includes(String(host.today())) ? 'stamped hot' : 'hot', 'card-daily'),
-          ...CLUTCH_CARDS.map((c, i) => card(c.title.toUpperCase(), c.blurb, String(i + 1), () => host.startClutch(c), cleared.has(c.id) ? 'stamped' : '', 'card-' + c.id)),
+          card("TODAY'S EDITION", daily.blurb, '☀', () => host.previewClutch(daily), host.save.data.flags.dailyDone.includes(String(host.today())) ? 'stamped hot' : 'hot', 'card-daily'),
+          ...CLUTCH_CARDS.map((c, i) => card(c.title.toUpperCase(), c.blurb, String(i + 1), () => host.previewClutch(c), cleared.has(c.id) ? 'stamped' : '', 'card-' + c.id)),
+          btn('Back', () => host.back(), 'small', false, 'back'),
+        ),
+      );
+    }
+    case 'clutchIntro': {
+      const c = host.pendingCard();
+      if (!c) return screen('dim', btn('Back', () => host.back(), 'small', false, 'back'));
+      const bases = ['1ST', '2ND', '3RD'].filter((_, i) => c.bases[i]).join(' · ') || 'BASES EMPTY';
+      const goal = c.homerSwings ? `Hit ${c.homersNeeded ?? 1} home run${(c.homersNeeded ?? 1) > 1 ? 's' : ''} in ${c.homerSwings} swings` : c.side === 'bat' ? `Score ${c.runs} run${c.runs > 1 ? 's' : ''} before the third out` : `Get ${c.outsToGet ?? 3 - c.outs} out${(c.outsToGet ?? 3 - c.outs) > 1 ? 's' : ''} — allow ${c.runs === 0 ? 'no runs' : `${c.runs} run${c.runs > 1 ? 's' : ''} at most`}`;
+      return screen('dim',
+        el('div', { class: 'stamp' }, c.title.toUpperCase()),
+        el('div', { class: 'tagline' }, c.side === 'bat' ? 'You bat' : 'You pitch'),
+        el('div', { class: 'col stagger' },
+          el('div', { class: 'panel' },
+            el('h3', {}, 'THE SITUATION'),
+            el('p', {}, c.blurb),
+            field('Score', el('span', { class: 'heat' }, `${c.scoreHuman}–${c.scoreCpu}`)),
+            field('Outs · count', el('span', { class: 'heat' }, `${c.outs} · ${c.balls}-${c.strikes}`)),
+            field('Runners', el('span', { class: 'heat' }, bases)),
+          ),
+          el('div', { class: 'panel' }, el('h3', {}, 'TO WIN'), el('p', {}, goal)),
+          btn('PLAY CARD', () => host.startClutch(c), 'primary', false, 'card-start'),
           btn('Back', () => host.back(), 'small', false, 'back'),
         ),
       );
