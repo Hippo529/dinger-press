@@ -24,7 +24,7 @@ const VIEWPORTS = [
 ].filter((v) => !onlyVp.length || onlyVp.includes(v.name));
 
 function startServer() {
-  const proc = spawn('npx', ['vite', 'preview', '--port', String(PORT), '--strictPort'], { stdio: ['ignore', 'pipe', 'pipe'] });
+  const proc = spawn(process.execPath, ['node_modules/vite/bin/vite.js', 'preview', '--port', String(PORT), '--strictPort'], { stdio: ['ignore', 'pipe', 'pipe'] });
   return new Promise((resolve, reject) => {
     const t = setTimeout(() => reject(new Error('preview server timeout')), 20000);
     proc.stdout.on('data', (d) => { if (String(d).includes(String(PORT))) { clearTimeout(t); resolve(proc); } });

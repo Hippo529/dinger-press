@@ -358,3 +358,16 @@ Make decisions and keep moving. Record judgement calls under Decisions in SPEC.m
 - Disagreement noted: the reviewer asked for a 60–90 s median Clutch duration in the bot test. Bot sim time excludes human hesitation, so the test band is 45–110 s (D10) around the 60–90 s human target.
 - Scaffold: npm scripts dev/build/build:single/test/check/verify; check.mjs (+4 unit tests) and trivial verify green: `VERIFY: 3/3 scenarios, 0 page errors, 0 console errors`.
 - Next: M1, one playable at-bat end to end.
+
+## M1 — one playable at-bat end to end
+Done:
+- Pure sim (src/sim): parametric pitches (D1), calibrated ballistics (drag 0.0018, Magnus 0.0008 → 100 mph@28° = 396 ft, 110@30° = 451 ft), deterministic grading, live play with intercept fielding and running, flow and modes. CPU-vs-CPU games run to completion (mercy, walk-off and final all observed).
+- Front end: fixed loop with wall→sim clock mapping, input layer (Pointer Events + keys → semantic actions with timeStamps), renderer (baked batting view, 2.5D field view, procedural characters, ball/trail/shadow/seam tells), HUD, fx, audio engine/director (vendored ZzFX buildSamples), DOM menus, save store, iOS platform glue, debug hooks.
+- Evidence: `npm test` 27/27 (core, contact, sim, check); `npm run check` 0 violations; `VERIFY: 13/13 scenarios, 0 page errors, 0 console errors, screenshots: artifacts/screens/M1`.
+- Fixes found along the way: (1) the batter at true scale covered the pitcher; it is now drawn at a 0.62 cheat scale near the edge (tuning.camera.batterScale). (2) The clock mapping clamped input times to "now", which shifted 60 Hz swings by up to a frame; the fairness test caught it, and past timestamps are now allowed (±250 ms bound). (3) The freeze frame showed the field camera; the batting view now holds through hit-stop. (4) Disabled chips were translucent over field lines.
+- Test that looked wrong: my own checklist step for the Gutter said "100 mph 25° pulled to RF hits wall below 38 ft". The physics puts that ball ~55 ft high at the wall, a clear HR. The test uses 20° (~31 ft at the wall → rebound) and also asserts 25° is a HR. The step's wording is off by one launch angle, not the code.
+Screenshots (M1):
+- title-attract-*: logo over a live CPU at-bat in the riso crowd; reads well. The attract HUD was hidden after the first look.
+- first-pitch-*: meatball cue, lower third and nameplates no longer overlap; the zone is ~120 px wide on iPhone portrait. Landscape: the lower third covers the batter's torso, which is acceptable, but the prompt pulses over the pitcher.
+- perfect-freeze-*: ball at the plate with sparks and "107 mph · 424 ft". The bat was still raised in the first take; fixed by starting the swing at the contact pose.
+Known issues / next: M2 rule/fielding/running tests and scenarios, throw prompt, inning change, mercy, game over → restart.

@@ -19,7 +19,7 @@
    "Add a temp violating file in a test fixture",
    "check script unit test asserts each violation type is reported"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F003",
@@ -63,7 +63,7 @@
    "vitest replays recorded input log",
    "hashes equal; different seed differs"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F007",
@@ -74,7 +74,7 @@
    "verify loads ?debug=1",
    "__game methods exist; overlay text visible in screenshot"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F008",
@@ -85,7 +85,7 @@
    "Run npm run verify",
    "Last line matches VERIFY: n/n scenarios, 0 page errors, 0 console errors"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F009",
@@ -96,7 +96,7 @@
    "Unit test loop with fake clock: 1 s wall at scale 0.5 => 60 steps; 1 s gap clamps to 30 steps",
    "Assertions pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F010",
@@ -107,7 +107,7 @@
    "check script + unit test of RNG sequence for seed 1",
    "check passes; sequence matches fixture"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F011",
@@ -118,7 +118,7 @@
    "vitest physics.test",
    "Both carry assertions pass; 95 mph@-10° is a grounder (<=150 ft first bounce)"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F012",
@@ -129,7 +129,7 @@
    "Unit test ball at 105 mph 32° pull vs default fence",
    "HR flag true; same ball into 38 ft Gutter wall at height<38 rebounds"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F013",
@@ -140,7 +140,7 @@
    "Unit test spray 50° and 40°",
    "foul true / false"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F014",
@@ -151,7 +151,7 @@
    "Unit test each type position(T) == target within 0.01 ft",
    "Assertions pass; curve mid-flight deviates from straight line by >0.5 ft"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F015",
@@ -162,7 +162,7 @@
    "Unit test flightTime()",
    "Values within 0.01 s"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F016",
@@ -173,7 +173,7 @@
    "Unit test: same swing timestamp processed with 16.7 ms vs 8.3 ms frame chunks",
    "Same offset ms and grade"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F017",
@@ -184,7 +184,7 @@
    "Unit test grade() at boundary offsets for HEAT 0 and with POWER, Star, newbie, contact rating 0/10 and Pesky multipliers",
    "Each boundary maps to documented grade; +8 ms late grace stays exactly 8 ms when windows scale"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F018",
@@ -195,7 +195,7 @@
    "Unit test out-of-zone pitches with GOOD timing per tier",
    "Pro grades match; Rookie high pitch with PERFECT timing grades PERFECT"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F019",
@@ -206,7 +206,7 @@
    "Unit test: RHB offset −60 gives negative (LF) spray, LHB positive; +60 opposite; repeat call equal",
    "Assertions pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F020",
@@ -239,7 +239,7 @@
    "verify iPhone: dispatch pointerdown without pointerup during pitch; separately tap POWER chip",
    "pointerdown alone produces a swing grade; POWER chip tap toggles power and does not swing"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F023",
@@ -250,7 +250,7 @@
    "Unit test: same timing in upper/middle/lower third and left/right",
    "LA offsets exactly +9°/0/−14°; spray offsets ±12°"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F024",

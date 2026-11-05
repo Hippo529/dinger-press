@@ -69,7 +69,7 @@ export const TUNING = {
     decayPerS: 1.2,
   },
   slowmo: { scale: 0.35, holdS: 0.8, easeS: 0.3 }, // HR / walk-off only; hold is REAL seconds
-  camera: { punchZoom: 1.07, punchOutMs: 200, followK: 6, fieldFovScale: 1.0 },
+  camera: { punchZoom: 1.07, punchOutMs: 200, followK: 6, fieldFovScale: 1.0, batterScale: 0.62 }, // batterScale: batting-view cheat scale
   squash: { ballContact: [0.7, 1.3], contactFrames: 2, mitt: [0.85, 1.15], mittRecoverMs: 120, stretchMax: 1.6 },
   trail: { points: 12, baseWidthPx: 5, speedWidthPx: 5 },
   popup: { inMs: 150, driftPx: 40, holdMs: 500, fadeMs: 200 },
