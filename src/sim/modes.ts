@@ -100,10 +100,10 @@ export function proof(o: CommonOpts): ModeConfig {
 }
 
 /** Moonshot Mill: each player swings with their own character until 10 outs. */
-export function mill(o: CommonOpts & { chars: string[]; outs?: number }): ModeConfig {
+export function mill(o: CommonOpts & { chars: string[]; outs?: number; bracket?: boolean }): ModeConfig {
   const t = draftTeams(o);
   const cfg = base(o, 'mill', t);
-  cfg.mill = { outs: o.outs ?? 10, chars: o.chars };
+  cfg.mill = { outs: o.outs ?? 10, chars: o.chars, bracket: !!o.bracket && o.players.length >= 4 };
   cfg.humanBat = [0, null];
   return cfg;
 }

@@ -59,7 +59,7 @@ export class Sim {
     }
     if (cfg.mill) {
       const n = cfg.players.length;
-      s.mill = { player: 0, outs: 0, scores: new Array(n).fill(0), streak: 0, bestStreak: new Array(n).fill(0), longest: new Array(n).fill(0) };
+      s.mill = { player: 0, outs: 0, scores: new Array(n).fill(0), streak: 0, bestStreak: new Array(n).fill(0), longest: new Array(n).fill(0), queue: [...Array(n).keys()], qi: 0, round: 1, round1: null };
     }
     enterPrePitch(this.ctx, true);
   }

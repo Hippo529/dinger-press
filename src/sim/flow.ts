@@ -335,16 +335,28 @@ export function afterCelebrate(c: Ctx): void {
 function nextMillPlayer(c: Ctx): void {
   const s = c.s;
   const m = s.mill!;
-  if (m.player + 1 >= s.cfg.players.length) {
-    let best = 0;
-    m.scores.forEach((v, i) => {
-      if (v > m.scores[best]) best = i;
-    });
+  m.qi++;
+  if (m.qi >= m.queue.length) {
+    // Elimination bracket (4+ players): the top two of round 1 meet in a final.
+    if (s.cfg.mill!.bracket && m.round === 1 && s.cfg.players.length >= 4) {
+      m.round1 = m.scores.slice();
+      m.queue = m.queue.slice().sort((a, b) => m.scores[b] - m.scores[a]).slice(0, 2);
+      m.qi = 0;
+      m.round = 2;
+      for (const p of m.queue) m.scores[p] = 0;
+      m.player = m.queue[0];
+      m.outs = 0;
+      m.streak = 0;
+      banner(c, 'THE FINAL', `${s.cfg.players[m.queue[0]].name} vs ${s.cfg.players[m.queue[1]].name}`, 'neutral');
+      return handoff(c, m.player, 'mill');
+    }
+    let best = m.queue[0];
+    for (const p of m.queue) if (m.scores[p] > m.scores[best] || (m.scores[p] === m.scores[best] && m.round1 && m.round1[p] > m.round1[best])) best = p;
     s.winner = best;
-    s.overReason = 'Mill complete';
+    s.overReason = m.round === 2 ? 'Bracket final' : 'Mill complete';
     return gameOver(c);
   }
-  m.player++;
+  m.player = m.queue[m.qi];
   m.outs = 0;
   m.streak = 0;
   handoff(c, m.player, 'mill');

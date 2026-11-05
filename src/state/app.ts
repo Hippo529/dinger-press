@@ -136,8 +136,8 @@ export class App implements InputHost, UiHost {
   private profiles(ps: PlayerSetup[]) {
     return ps.map((p) => ({ name: p.name, heat: p.heat, tier: p.tier }));
   }
-  startMill(players: PlayerSetup[]): void {
-    this.begin(mill({ ...this.common(), players: this.profiles(players), chars: players.map((p) => p.char), firstEver: false }));
+  startMill(players: PlayerSetup[], bracket = false): void {
+    this.begin(mill({ ...this.common(), players: this.profiles(players), chars: players.map((p) => p.char), firstEver: false, bracket }));
   }
   startProof(players: PlayerSetup[]): void {
     this.begin(proof({ ...this.common(), players: this.profiles(players), firstEver: false }));

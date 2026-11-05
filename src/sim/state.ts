@@ -49,7 +49,7 @@ export interface ModeConfig {
   firstEver: boolean;
   hideLocator: boolean;
   clutch?: ClutchSpec;
-  mill?: { outs: number; chars: string[] }; // one character per player
+  mill?: { outs: number; chars: string[]; bracket?: boolean }; // one character per player
   cage?: { pitch: PitchType | 'mix' };
 }
 
@@ -165,7 +165,7 @@ export interface GameState {
   overReason: string;
   walkoff: boolean;
   tiebreak: { team: 0 | 1; left: number; hrs: [number, number]; round: number } | null;
-  mill: { player: number; outs: number; scores: number[]; streak: number; bestStreak: number[]; longest: number[] } | null;
+  mill: { player: number; outs: number; scores: number[]; streak: number; bestStreak: number[]; longest: number[]; queue: number[]; qi: number; round: number; round1: number[] | null } | null;
   clutchResult: 'win' | 'lose' | null;
   clutchStartRuns: number;
   clutchSwings: number;

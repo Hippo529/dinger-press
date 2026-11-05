@@ -33,7 +33,7 @@ export interface UiHost {
   go(id: ScreenId): void;
   back(): void;
   startShortRun(): void;
-  startMill(players: PlayerSetup[]): void;
+  startMill(players: PlayerSetup[], bracket?: boolean): void;
   startProof(players: PlayerSetup[]): void;
   startClutch(card: ClutchSpec): void;
   previewClutch(card: ClutchSpec): void;
@@ -215,6 +215,7 @@ function partyScreen(host: UiHost, kind: 'mill' | 'proof'): HTMLElement {
   const st = host.save.data.settings;
   const chars = host.unlockedChars();
   const players: PlayerSetup[] = [];
+  let bracket = false;
   const list = el('div', { class: 'col' });
   const add = () => {
     const i = players.length;
@@ -242,14 +243,16 @@ function partyScreen(host: UiHost, kind: 'mill' | 'proof'): HTMLElement {
   const controls = kind === 'mill'
     ? el('div', { class: 'row' },
         btn('+ Player', () => { if (players.length < 8) { add(); render(); } }, 'small teal', false, 'party-add'),
-        btn('− Player', () => { if (players.length > 1) { players.pop(); render(); } }, 'small', false, 'party-remove'))
+        btn('− Player', () => { if (players.length > 1) { players.pop(); render(); } }, 'small', false, 'party-remove'),
+        el('span', { class: 'note' }, 'Bracket (4+):'),
+        seg<string>([{ v: 'off', label: 'OFF' }, { v: 'on', label: 'ON' }], 'off', (v) => { bracket = v === 'on'; }, 'party-bracket'))
     : null;
   return screen('dim',
     el('h2', {}, kind === 'mill' ? 'Moonshot Mill' : 'Pass the Proof'),
     el('div', { class: 'col' },
       list,
       controls,
-      btn('START', () => (kind === 'mill' ? host.startMill(players) : host.startProof(players)), 'primary', false, 'party-start'),
+      btn('START', () => (kind === 'mill' ? host.startMill(players, bracket) : host.startProof(players)), 'primary', false, 'party-start'),
       btn('Back', () => host.back(), 'small', false, 'back'),
     ),
   );

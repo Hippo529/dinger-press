@@ -399,3 +399,31 @@ describe('modes', () => {
     expect(keys.size).toBeGreaterThanOrEqual(20);
   });
 });
+
+describe('Mill elimination bracket (stretch)', () => {
+  it('4 players: round 1 for all, then the top two meet in a final; winner decided by the final', async () => {
+    const { afterDead } = await import('../src/sim/flow');
+    const players = ['A', 'B', 'C', 'D'].map((name) => ({ name, heat: 0, tier: 'rookie' as const }));
+    const sim = new Sim(mill({ seed: 3, players, chars: ['moose', 'tilly', 'brick', 'sonny'], bracket: true }));
+    const s = sim.s;
+    const finishTurn = (score: number) => {
+      s.mill!.scores[s.mill!.player] = score;
+      s.mill!.outs = 10;
+      afterDead(sim.ctx);
+      if (s.phase === 'handoff') {
+        s.phaseT = s.time - 1;
+        sim.act({ type: 'ready' });
+        sim.step(1 / 120);
+      }
+    };
+    [500, 900, 200, 700].forEach(finishTurn);
+    expect(s.mill!.round).toBe(2);
+    expect(s.mill!.queue).toEqual([1, 3]);
+    expect(s.mill!.player).toBe(1);
+    finishTurn(300); // B in the final
+    finishTurn(450); // D in the final
+    expect(s.phase).toBe('gameOver');
+    expect(s.winner).toBe(3);
+    expect(s.overReason).toBe('Bracket final');
+  });
+});
