@@ -608,12 +608,12 @@
   "id": "F056",
   "tier": "core",
   "category": "modes",
-  "description": "Clutch Cards: 8 authored scenarios with win checks, each 60–90 s typical",
+  "description": "Clutch Cards: 8 authored scenarios with win checks, each 30–60 s typical (target changed by the project owner after M7)",
   "steps": [
    "Bot plays each card in vitest; print durations",
-   "Each resolves to win/lose by its documented check; median sim duration 45–110 s (D10)"
+   "Each resolves to win/lose by its documented check; median sim duration 30–60 s (D10)"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F057",

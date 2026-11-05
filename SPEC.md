@@ -242,7 +242,7 @@ ground contact or at the fence.
 | Short Run | §3.6. A setup toggle "Bat first" defaults to ON: the player is the away team and bats in the top half, so the very first pitch a new player sees is a batting pitch (the meatball tutorial). With it off, the player is home and can walk it off. |
 | Moonshot Mill | 10 outs. A non-homer swing is an out and a called strike is an out; a taken ball is free. Score per homer = distance × (1 + 0.25·streak), PERFECT +100, × HEAT multiplier. Pass-and-play for 2–8 players with handoff screens. Elimination bracket for 4+ (stretch). |
 | Pass the Proof | 2 players, 3 innings. P1 bats the top halves and P2 the bottom halves, each against CPU pitching and fielding tuned to their own HEAT. Same rules as Short Run: mercy, walk-off, extras 4–6 with a runner on 2nd, then the 3-swing derby. A handoff screen ("Pass to P2 — tap when ready"; touches are ignored for 400 ms) sits between every two consecutive halves, so a game of h halves has h − 1 handoffs; the sudden-death derby adds one handoff before each team's turn. |
-| Clutch Cards | 8 authored cards plus Today's Edition (seeded from YYYYMMDD). One half-inning scenario with a win condition, 60–90 s long. |
+| Clutch Cards | 8 authored cards plus Today's Edition (seeded from YYYYMMDD). One half-inning scenario with a win condition, typically 30–60 s. |
 | The Cage | No outs. Pick the pitch type and speed (HEAT), see the ms readout, and toggle every indicator. |
 
 Clutch cards (one half-inning each; "batting" means the player bats against CPU pitching and fielding):
@@ -260,8 +260,9 @@ Clutch cards (one half-inning each; "batting" means the player bats against CPU 
 
 Cards start with 0–1 outs and pitching cards tolerate a run, so a single hit or double play rarely
 decides them; with two outs a card was decided by one at-bat (M2 bot measurement: 13 s median). The
-current bot median is 34 s: a full three-out half-inning at this game's pace is 6–12 pitches
-(24–54 s), so the 60–90 s target is open (see progress.md, F056).
+current bot median is 39 s: a full three-out half-inning at this game's pace is 6–12 pitches
+(24–54 s). The target is a 30–60 s median, set by the project owner after M7 so that no mode's pace
+slows down (the brief's original 60–90 s would have required slower half-innings everywhere).
 
 **Today's Edition** is generated from a seed of YYYYMMDD: side (batting/pitching), run gap −3..+3
 (the sign follows the side), base state (8 options), outs 0–2, and count. The win check is derived
@@ -463,7 +464,7 @@ Math.random is banned in `src/sim` (enforced by `npm run check`).
 - **D9. On the first Short Run the player bats first** ("Bat first" defaults to on), so the
   tutorial meatball is a batting pitch.
 - **D10. Bot timing is not human timing.** Clutch Card duration is measured in sim seconds by a bot
-  that never hesitates, so its tested band is 45–110 s median, around the 60–90 s human target.
+  that never hesitates. The tested band is a 30–60 s median (owner decision after M7, replacing 60–90 s).
 
 ## 15. Out of scope
 - Online play and accounts

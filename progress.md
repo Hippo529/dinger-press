@@ -489,3 +489,11 @@ Bot numbers (final):
 - Fielding audit: 726 balls in play, 422 throws, 0 violations.
 - Clutch Card median: 39 s.
 Known issue (left for a human decision): F056, Clutch Card median 39 s against the 45–110 s band (brief: 60–90 s). Half-innings at this game's pace take 24–54 s; lengthening them would slow every mode.
+
+## Post-M7 — owner decisions and deployment
+- Clutch Card target changed by the project owner from 60–90 s to a **30–60 s median**, without slowing any mode's pace. The test, SPEC.md (§7, D10) and the F056 entry text were updated per that instruction. The bot median of 39 s passes, so F056 is now passing; this is the only checklist text changed after M0, at the owner's request.
+- Added `.github/workflows/pages.yml`:
+  - Runs `npm ci` → `npm test` → `npm run check` → `npm run build` → `npm run audit`, then uploads `dist/` and deploys to GitHub Pages.
+  - Action majors were read from the action repos' tags: checkout v7, setup-node v7, configure-pages v6, upload-pages-artifact v5, deploy-pages v5.
+  - Playwright browser download is skipped in CI.
+- Subpath check: dist/ served under `/dinger-press/` with Python's http.server and loaded in Chromium. Zero failed requests; the manifest's start_url and scope resolve to `/dinger-press/`; all icons and the apple-touch-icon return 200; a Short Run starts. There is no service worker.

@@ -372,7 +372,7 @@ describe('modes', () => {
     void stats;
     void botGame;
   });
-  it('Clutch Cards: every card resolves by its check; median duration 45–110 s', () => {
+  it('Clutch Cards: every card resolves by its check; median duration 30–60 s', () => {
     const durs: number[] = [];
     for (const card of CLUTCH_CARDS) {
       const st = { swings: 0, hr: 0, pa: 0, onBase: 0, pitches: 0, games: 0, takeToWindup: [], deadToReady: [], hrToReady: [], violations: [], durations: [] as number[] };
@@ -384,8 +384,8 @@ describe('modes', () => {
     durs.sort((a, b) => a - b);
     const med = (durs[3] + durs[4]) / 2;
     report('BOT clutch durations (s):', durs.map((d) => d.toFixed(0)).join(', '), 'median', med.toFixed(0));
-    expect(med).toBeGreaterThanOrEqual(45);
-    expect(med).toBeLessThanOrEqual(110);
+    expect(med).toBeGreaterThanOrEqual(30);
+    expect(med).toBeLessThanOrEqual(60);
   });
   it("Today's Edition: same date → same card; ≥20 distinct across 30 dates; checks consistent", () => {
     expect(dailyCard(20261105)).toEqual(dailyCard(20261105));
