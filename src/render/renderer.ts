@@ -40,6 +40,7 @@ export class Renderer {
   private batCam: Camera = makeCamera();
   private fieldCam: Camera = makeCamera();
   view: 'bat' | 'field' = 'bat';
+  private throwLift = 0;
   private viewT = 0;
   camTarget = { x: 0, y: 120 };
   private bakeKey = '';
@@ -124,6 +125,10 @@ export class Renderer {
       this.camTarget.x += (tx - this.camTarget.x) * k;
       this.camTarget.y += (Math.max(60, ty) - this.camTarget.y) * k;
       fieldView(this.fieldCam, this.w, this.h, this.camTarget, l.portrait);
+      // While the throw diamond is up, lift the field so the bases and runners sit above the buttons.
+      const throwing = humanPitcher(s) !== null && p.secured && !p.firstThrowDone && p.throwPromptUntil < Infinity;
+      this.throwLift += ((throwing ? 1 : 0) - this.throwLift) * Math.min(1, realDt * 8);
+      this.fieldCam.cy -= this.h * (l.portrait ? 0.2 : 0.12) * this.throwLift;
       const bl = easeOutCubic(Math.min(1, (fx.now - this.viewT) / 0.35));
       blendCam(this.cam, this.batCam, this.fieldCam, bl);
     } else {
@@ -329,6 +334,9 @@ export class Renderer {
     this.ballScreen = { x: bx, y: by, r, visible: true };
   }
   contactT = -99;
+  swingRealT = -99; // real time of the last swing (the timing bar animates on real time: hit-stop freezes sim time)
+  timingBarDrawn = false;
+  replayRect: Rect | null = null;
 
   private drawHud(s: GameState, rt: number, avoid: Rect | null): void {
     const ctx = this.ctx;
@@ -366,12 +374,13 @@ export class Renderer {
     else if (hp !== null && s.phase === 'prePitch') drawPrompt(ctx, l, s.cfg.assistPitch ? 'TAP THE ZONE TO PITCH' : 'HOLD IN THE ZONE · RELEASE IN THE GOLD', pulse, THEME.teal);
     else if (hp !== null && s.phase === 'pitch' && s.pitch && s.pitch.t / s.pitch.T < TUNING.pitch.steerUntilS) drawPrompt(ctx, l, 'DRAG ◀ ▶ TO STEER', pulse, THEME.teal);
     if (inBat) drawLowerThird(ctx, l, s, m);
-    const age = rt - s.last.swingT;
-    if ((hb !== null || s.cfg.cage) && age >= 0 && age < TUNING.timing.timingBarShowS) drawTimingBar(ctx, l.timingBar, s, this.settings.showTimingMs || !!s.cfg.cage, age);
+    const age = fx.now - this.swingRealT;
+    this.timingBarDrawn = (hb !== null || !!s.cfg.cage) && s.last.grade !== null && age >= 0 && age < TUNING.timing.timingBarShowS;
+    if (this.timingBarDrawn) drawTimingBar(ctx, l.timingBar, s, this.settings.showTimingMs || !!s.cfg.cage, age);
     drawBanner(ctx, l, s, m);
     drawPopups(ctx, this.pops, fx.now, m, avoid);
     if (fx.now < fx.stillUntil + 0.6 && fx.stillBanner) drawPrompt(ctx, l, fx.stillBanner, 0, THEME.sun);
-    if (s.phase === 'celebrate' && this.replay.active) drawReplay(ctx, l, this.replay, fx.now, s.cfg.stadium);
+    this.replayRect = s.phase === 'celebrate' && this.replay.active ? drawReplay(ctx, l, this.replay, fx.now, s.cfg.stadium) : null;
     for (const k of Object.keys(this.pressed)) if (fx.now - this.pressed[k] > 0.3) delete this.pressed[k];
     const press: Record<string, number> = {};
     for (const k of Object.keys(this.pressed)) {

@@ -2,6 +2,7 @@
 import { THEME } from '../config/theme';
 import type { Character } from '../config/roster';
 import { easeInBack, easeOutCubic } from '../core/easing';
+import { glowSprite } from './bake';
 
 export type PoseKind = 'idle' | 'stance' | 'swing' | 'windup' | 'throw' | 'field' | 'run' | 'catcher' | 'celebrate' | 'slump' | 'dive';
 
@@ -37,10 +38,10 @@ export function poseLimbs(p: Pose): Limbs {
   const t = p.t;
   switch (p.kind) {
     case 'stance':
-      return { legF: 0.32, legB: -0.32, armF: 2.0, armB: 2.3, lean: 0.12, crouch: p.power ? 0.35 : 0.15, bat: -2.2 + Math.sin(t * 3) * 0.08, hop: 0 };
+      return { legF: p.power ? 0.55 : 0.32, legB: p.power ? -0.55 : -0.32, armF: 2.0, armB: 2.3, lean: p.power ? 0.25 : 0.12, crouch: p.power ? 0.4 : 0.15, bat: -2.2 + Math.sin(t * 3) * 0.08, hop: 0 };
     case 'swing': {
       const k = easeOutCubic(Math.min(1, t));
-      return { legF: 0.4, legB: -0.45 + k * 0.3, armF: 2.0 - k * 1.1, armB: 2.3 - k * 1.3, lean: 0.12 - k * 0.3, crouch: p.power ? 0.35 : 0.15, bat: -2.2 + k * 5.0, hop: 0 };
+      return { legF: p.power ? 0.6 : 0.4, legB: (p.power ? -0.6 : -0.45) + k * 0.3, armF: 2.0 - k * 1.1, armB: 2.3 - k * 1.3, lean: 0.12 - k * 0.3, crouch: p.power ? 0.35 : 0.15, bat: -2.2 + k * 5.0, hop: 0 };
     }
     case 'windup': {
       const k = easeInBack(Math.min(1, t));
@@ -206,6 +207,18 @@ export function drawCharacter(ctx: CanvasRenderingContext2D, x: number, y: numbe
       const ba = L.bat;
       const bl = 2.8 * sc;
       const bx = fax + Math.cos(ba) * bl * f, by = fay + Math.sin(ba) * bl;
+      if (pose.power) {
+        // POWER: a pink glow along the bat so the room can see the gamble
+        const g = glowSprite(THEME.pink, 64);
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.globalAlpha = 0.85;
+        for (let i = 1; i <= 4; i++) {
+          const k = i / 4, gs = 1.6 * sc;
+          ctx.drawImage(g, fax + (bx - fax) * k - gs / 2, fay + (by - fay) * k - gs / 2, gs, gs);
+        }
+        ctx.restore();
+      }
       const skin = BAT_SKINS[pose.bat ?? 'wood'] ?? BAT_SKINS.wood;
       capsule(ctx, fax, fay, bx, by, Math.max(2, 0.32 * sc), skin.body, ol);
       ctx.strokeStyle = skin.stripe;

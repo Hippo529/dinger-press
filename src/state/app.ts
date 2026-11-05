@@ -193,6 +193,15 @@ export class App implements InputHost, UiHost {
 
   private onSimEvent(e: SimEvent): void {
     if (e.type === 'gameOver') this.gameOverAt = this.fx.now;
+    if (e.type === 'pitchReleased' && this.session) {
+      const s = this.session.sim.s;
+      if (s.cfg.humanBat[s.tiebreak ? s.tiebreak.team : s.half] !== null || s.mill) {
+        // persist live, so quitting the first game doesn't replay the newbie meatball/windows
+        this.save.data.stats.pitchesSeen++;
+        this.save.data.flags.firstRunDone = true;
+        this.save.save();
+      }
+    }
   }
 
   private endGame(): void {

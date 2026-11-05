@@ -78,7 +78,9 @@ export function computeLayout(w: number, h: number, insets: Insets, lefty: boole
   const tbw = Math.min(right - left - 2 * chip, 360);
   const timingBar = { x: w / 2 - tbw / 2, y: portrait ? bottom - chip - 64 : bottom - 52, w: tbw, h: 40 };
   const banner = { x: left, y: portrait ? h * 0.2 : Math.max(top + 64, h * 0.3), w: right - left, h: 92 };
-  const prompt = { x: left, y: top + scoreboard.h + 36, w: right - left, h: 36 };
+  // Landscape: right half of the row under the scoreboard (beside the lower third), above the pitcher's
+  // head and well clear of the strike zone.
+  const prompt = portrait ? { x: left, y: top + scoreboard.h + 36, w: right - left, h: 36 } : { x: w / 2 + 10, y: top + scoreboard.h + 34, w: right - (w / 2 + 10), h: 36 };
   const pad = { x: insets.left, y: top + scoreboard.h + 6, w: w - insets.left - insets.right, h: bottom - (top + scoreboard.h + 6) };
   return { w, h, portrait, insets, lefty, scoreboard, pause, power, star, pitchChips, stamina, throwBtns, send, hold, timingBar, banner, prompt, pad, plane: { cx: w / 2, cy: h / 2, s: 60 } };
 }

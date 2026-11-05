@@ -236,10 +236,10 @@ describe('pitching', () => {
 });
 
 describe('stars and fairness', () => {
-  it('awards stack, cap at 5; PERFECT double = +2', () => {
+  it('awards stack and cap at 5 (PERFECT-at-contact is tested through doSwing in review.test.ts)', () => {
     const { s } = fresh();
-    awardStars(s, 0, 1); // PERFECT
-    awardStars(s, 0, 1); // extra-base hit
+    awardStars(s, 0, 1);
+    awardStars(s, 0, 1);
     expect(s.teams[0].stars).toBe(2);
     awardStars(s, 0, 9);
     expect(s.teams[0].stars).toBe(5);
@@ -259,7 +259,7 @@ describe('stars and fairness', () => {
     const w = windows({ heat: 0, contact: 5, power: false, star: true, newbie: false, traitMul: 1 });
     const o = contactOut('GOOD', { offsetMs: 70, tier: 'rookie', cross: { x: 0, z: 2.55 }, batterHand: 1, power: false, powerRating: 4, moonshot: false, starSwing: true, dirV: 0, dirH: 0, maxEv: maxEvFor(4) }, w);
     expect(o.ev).toBe(maxEvFor(4));
-    expect(TUNING.pitch.starBreak).toBe(1.8);
+    expect(TUNING.pitch.starBreak).toBe(1.8); // the pitch-level ×1.8 is asserted on makePitch in review.test.ts
   });
   it('CPU uses a Star Pitch only with ≥2 stars and high leverage', () => {
     const rng = new Rng(4);

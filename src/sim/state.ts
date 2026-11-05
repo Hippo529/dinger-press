@@ -134,7 +134,8 @@ export interface GameState {
   thr: ThrowState | null;
   // batter UI state
   power: boolean;
-  starArmed: boolean;
+  starArmed: boolean; // batter's Star Swing
+  pitchStarArmed: boolean; // human pitcher's Star Pitch
   aim: { x: number; z: number };
   // pitcher UI state
   pitchSel: number;
@@ -238,6 +239,7 @@ export function createState(cfg: ModeConfig): GameState {
     thr: null,
     power: false,
     starArmed: false,
+    pitchStarArmed: false,
     aim: { x: 0, z: 2.55 },
     pitchSel: 0,
     charging: false,

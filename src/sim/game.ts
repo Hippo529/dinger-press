@@ -15,6 +15,11 @@ import type { Action, SimEvent } from './types';
 
 type Queued = Action & { t: number; seq: number };
 
+/** Human aim stays in and around the zone (±1.2 ft): never at the batter, never into the dirt. */
+export function clampAim(x: number, z: number): { x: number; z: number } {
+  return { x: Math.max(-2.0, Math.min(2.0, x)), z: Math.max(0.6, Math.min(4.6, z)) };
+}
+
 export class Sim {
   s: GameState;
   rng: Rng;
@@ -108,10 +113,13 @@ export class Sim {
         return;
       case 'useStar': {
         if (!prePhase) return;
-        const team = hb !== null ? battingTeam(s) : hp !== null ? fieldingTeam(s) : null;
-        if (team === null) return;
-        if (s.starArmed) s.starArmed = false;
-        else if (s.teams[team].stars > 0) s.starArmed = true;
+        if (hb !== null) {
+          if (s.starArmed) s.starArmed = false;
+          else if (s.teams[battingTeam(s)].stars > 0) s.starArmed = true;
+        } else if (hp !== null) {
+          if (s.pitchStarArmed) s.pitchStarArmed = false;
+          else if (s.teams[fieldingTeam(s)].stars > 0) s.pitchStarArmed = true;
+        }
         return;
       }
       case 'selectPitch': {
@@ -122,7 +130,7 @@ export class Sim {
       }
       case 'chargeStart':
         if (hp === null || s.phase !== 'prePitch') return;
-        s.pitchAim = { x: a.zx, z: a.zz };
+        s.pitchAim = clampAim(a.zx, a.zz);
         if (s.cfg.assistPitch) {
           s.chargeLevel = (TUNING.pitch.sweetLo + TUNING.pitch.sweetHi) / 2;
           startWindup(c);
@@ -132,11 +140,11 @@ export class Sim {
         }
         return;
       case 'chargeMove':
-        if (hp !== null && s.charging) s.pitchAim = { x: a.zx, z: a.zz };
+        if (hp !== null && s.charging) s.pitchAim = clampAim(a.zx, a.zz);
         return;
       case 'chargeEnd':
         if (hp === null || !s.charging || s.phase !== 'prePitch') return;
-        if (a.zx !== undefined && a.zz !== undefined) s.pitchAim = { x: a.zx, z: a.zz };
+        if (a.zx !== undefined && a.zz !== undefined) s.pitchAim = clampAim(a.zx, a.zz);
         s.chargeLevel = (a.t - s.chargeStartT) / TUNING.pitch.chargeFillS;
         s.charging = false;
         startWindup(c);

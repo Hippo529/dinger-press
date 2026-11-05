@@ -31,7 +31,6 @@ export function finishGame(s: GameState, store: SaveStore, dateNum: number, play
   st.hits += s.stats.hits;
   st.ks += s.stats.ks;
   st.games++;
-  st.pitchesSeen += s.pitchesSeen;
   st.longestHr = Math.max(st.longestHr, s.stats.longestHr);
   st.maxEv = Math.max(st.maxEv, s.stats.maxEv);
   st.bestPerfectStreak = Math.max(st.bestPerfectStreak, s.bestPerfectStreak);

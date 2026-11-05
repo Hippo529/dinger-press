@@ -9,7 +9,7 @@ import {
   MEATBALL_TARGET, armEffect, chargeOutcome, crossing, fastballFlight, makePitch, pitchPos, useArm, PITCHES, applySteer,
 } from './pitch';
 import { startPlay } from './play';
-import { isStarChance, leverage, traitWindowMul } from './stars';
+import { awardStars, isStarChance, leverage, traitWindowMul } from './stars';
 import {
   activeHeat, activeTier, battingTeam, currentBatterId, currentPitcherId, fieldingTeam, humanBatter, humanPitcher, type SwingRec,
 } from './state';
@@ -66,7 +66,7 @@ export function releasePitch(c: Ctx): void {
     const co = s.cfg.assistPitch ? { speedMul: 1, scatter: TUNING.pitch.assistScatterFt, quality: 'perfect' as const } : chargeOutcome(charge);
     speedMul = co.speedMul;
     target = { x: s.pitchAim.x + c.rng.gauss() * co.scatter, z: s.pitchAim.z + c.rng.gauss() * co.scatter };
-    star = s.starArmed && team.stars > 0;
+    star = s.pitchStarArmed && team.stars > 0;
   } else {
     const plan = cpuPitch(c.rng, heat, pid, team.arm, team.stars, leverage(s), s.balls);
     type = plan.type;
@@ -78,9 +78,11 @@ export function releasePitch(c: Ctx): void {
       star = false;
     }
   }
+  // Never through the batter's box or into the dirt: clamp the final target.
+  target = { x: Math.max(-2.1, Math.min(2.1, target.x)), z: Math.max(0.5, Math.min(4.8, target.z)) };
+  if (hp !== null) s.pitchStarArmed = false;
   if (star) {
     team.stars -= 1;
-    s.starArmed = false;
     c.emit({ type: 'starSpent', team: fieldingTeam(s), kind: 'pitch' });
   }
   const eff = armEffect(team.arm, type);
@@ -206,6 +208,8 @@ export function doSwing(c: Ctx, rec: SwingRec): void {
   s.last.dist = 0;
   if (out.ev > s.stats.maxEv && hb !== null) s.stats.maxEv = out.ev;
   if (g === 'PERFECT') {
+    awardStars(s, battingTeam(s), 1);
+    c.emit({ type: 'starEarned', team: battingTeam(s), n: 1, why: 'PERFECT' });
     s.perfectStreak++;
     s.bestPerfectStreak = Math.max(s.bestPerfectStreak, s.perfectStreak);
     if (hb !== null) s.stats.perfect++;

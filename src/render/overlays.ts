@@ -217,7 +217,8 @@ export function drawLowerThird(ctx: CanvasRenderingContext2D, l: Layout, s: Game
   const out = age > 1.9 ? (age - 1.9) / 0.3 : 0;
   const w = Math.min(l.w - 24, 340);
   const x = 12 - (1 - inK + out) * (w + 20);
-  const y = l.portrait ? l.prompt.y + l.prompt.h + 10 : l.h - 150;
+  // portrait: under the prompt; landscape: top-left under the nameplates (the prompt sits low there)
+  const y = l.portrait ? l.prompt.y + l.prompt.h + 10 : l.scoreboard.y + l.scoreboard.h + 34;
   ctx.save();
   ctx.fillStyle = THEME.pink;
   ctx.fillRect(x + misreg, y + misreg, w, 52);
@@ -243,9 +244,10 @@ export function drawPrompt(ctx: CanvasRenderingContext2D, l: Layout, text: strin
   ctx.font = `${l.portrait ? 15 : 17}px ${FONTS.display}`;
   const tw = Math.min(r.w, ctx.measureText(text).width + 28);
   const x = r.x + r.w / 2 - tw / 2;
-  ctx.globalAlpha = 0.75 + 0.25 * Math.sin(pulse * 6);
+  // Only the accent plate pulses (offset); the ink box and its text stay fully opaque.
+  const off = 2 + 2.5 * (0.5 + 0.5 * Math.sin(pulse * 6));
   ctx.fillStyle = accent;
-  ctx.fillRect(x + 2, r.y + 2, tw, r.h);
+  ctx.fillRect(x + off, r.y + off, tw, r.h);
   ctx.fillStyle = INK;
   ctx.fillRect(x, r.y, tw, r.h);
   ctx.fillStyle = THEME.paper;
@@ -325,7 +327,8 @@ export function drawHandoff(ctx: CanvasRenderingContext2D, l: Layout, name: stri
 export function drawTicker(ctx: CanvasRenderingContext2D, l: Layout, text: string, misreg: number): void {
   const x = l.lefty ? l.power.x + l.power.w + 12 : l.insets.left + 12;
   const maxW = (l.lefty ? l.w - l.insets.right - 12 : l.power.x - 12) - x;
-  const y = l.portrait ? l.h - l.insets.bottom - 112 : l.h - l.insets.bottom - 64;
+  // one row above the timing bar so the two never share a line
+  const y = l.portrait ? l.h - l.insets.bottom - 112 : l.timingBar.y - 34;
   ctx.save();
   ctx.font = `700 ${l.portrait ? 12 : 13}px ${FONTS.ui}`;
   const label = 'GUS ▸ ';

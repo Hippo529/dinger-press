@@ -107,7 +107,7 @@ export class Session implements Steppable {
         this.say('walk');
         break;
       case 'hit':
-        this.say(e.bases >= 2 ? 'extraBase' : 'hit');
+        if (e.bases < 4) this.say(e.bases >= 2 ? 'extraBase' : 'hit');
         break;
       case 'caught':
         if (e.diving) this.say('diving');
@@ -173,6 +173,9 @@ export class Session implements Steppable {
         if (e.grade === 'WHIFF') break;
         break;
       }
+      case 'swing':
+        r.swingRealT = fx.now;
+        break;
       case 'whiff':
         pops.add('WHIFF', '', cx, bannerY - 50, fx.now, THEME.paper, 30);
         break;

@@ -104,7 +104,7 @@ export const m3 = [
       await h.tapRect(star);
       await h.advance(20);
       s = await h.state();
-      h.expect(s.starArmed, 'STAR chip armed the Star Pitch');
+      h.expect(s.pitchStarArmed && !s.starArmed, 'STAR chip armed the Star Pitch (pitcher flag)');
       const chip = s.buttons.find((b) => b.id === 'pitch1');
       await h.tapRect(chip);
       await h.advance(20);

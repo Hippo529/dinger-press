@@ -50,7 +50,6 @@ export function gameText(app: App): string {
     if (s.ball) return { kind: 'batted', pos: { x: r1(s.ball.p.x), y: r1(s.ball.p.y), z: r1(s.ball.p.z) }, vel: { x: r1(s.ball.v.x), y: r1(s.ball.v.y), z: r1(s.ball.v.z) } };
     return null;
   })();
-  const lastSwingAge = s.time - s.last.swingT;
   const prompts: string[] = [];
   if (s.starChance) prompts.push('starChance');
   if (s.play?.closeCall && s.play.closeCall.send === null && humanBatter(s) !== null) prompts.push('sendHold');
@@ -76,11 +75,12 @@ export function gameText(app: App): string {
     ball,
     locator: s.phase === 'pitch' && s.pitch && s.pitch.t / s.pitch.T >= TUNING.pitch.locatorAppearFrac && !s.cfg.hideLocator && app.save.data.settings.showLocator ? (() => { const c = crossing(s.pitch!); return { x: r1(c.x * 100) / 100, z: r1(c.z * 100) / 100 }; })() : null,
     last: { grade: s.last.grade, offsetMs: Math.round(s.last.offsetMs), ev: s.last.ev, la: r1(s.last.la), spray: r1(s.last.spray), dist: s.last.dist, call: s.last.call },
-    timingBar: s.last.grade !== null && lastSwingAge >= 0 && lastSwingAge < TUNING.timing.timingBarShowS ? { offsetMs: Math.round(s.last.offsetMs), grade: s.last.grade, ms: app.save.data.settings.showTimingMs || !!s.cfg.cage } : null,
+    timingBar: rend.timingBarDrawn && s.last.grade !== null ? { offsetMs: Math.round(s.last.offsetMs), grade: s.last.grade, ms: app.save.data.settings.showTimingMs || !!s.cfg.cage } : null,
     windows: s.win ? { perfect: r1(s.win.perfect), perfectLate: r1(s.win.perfectLate), good: r1(s.win.good), weak: r1(s.win.weak), scale: Math.round(s.win.scale * 1000) / 1000 } : null,
     stars: [s.teams[0].stars, s.teams[1].stars],
     power: s.power,
     starArmed: s.starArmed,
+    pitchStarArmed: s.pitchStarArmed,
     aim: { x: r1(s.aim.x * 100) / 100, z: r1(s.aim.z * 100) / 100 },
     pitchSel: s.pitchSel,
     charging: s.charging,
@@ -99,7 +99,7 @@ export function gameText(app: App): string {
     clutch: s.cfg.clutch ? { id: s.cfg.clutch.id, result: s.clutchResult } : null,
     pitchesSeen: s.pitchesSeen,
     totalPitches: s.totalPitches,
-    replay: { active: app.replay.active, frames: app.replay.playFrames },
+    replay: { active: app.replay.active, frames: app.replay.playFrames, rect: rend.replayRect, bannerRect: rend.layout.banner },
   });
   return JSON.stringify(out);
 }

@@ -76,7 +76,7 @@ export function makePitch(o: PitchOrder, rng: Rng): PitchState {
     release: { x: -1.7 * o.hand, y: 54.5, z: 5.7 },
     target: { x: o.target.x, y: CONTACT_Y, z: o.target.z },
     B: o.meatball ? 0 : def.B * bm * o.hand,
-    D: o.meatball ? 0.9 : def.D * (o.star ? Math.max(1, bm * 0.75) : 1),
+    D: o.meatball ? 0.9 : def.D * bm, // stamina and Star Pitch scale vertical break too
     p: def.p,
     T: o.T,
     t: 0,

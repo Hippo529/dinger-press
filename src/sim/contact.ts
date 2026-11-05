@@ -149,8 +149,9 @@ export function contactOut(g: Grade, c: ContactCtx, w: Windows): ContactOut {
     case 'WHIFF':
       return { ev: 0, la: 0, spray: 0 };
   }
-  // Pitch height shifts launch angle (low pitches go on the ground), except for All-Star reticle aim.
-  if (c.tier !== 'allstar' && (g === 'PERFECT' || g === 'GOOD' || g === 'EARLY' || g === 'LATE')) la += clamp((c.cross.z - 2.55) * 9, -9, 9);
+  // Pro: pitch height shifts launch angle (low pitches go on the ground). Rookie is auto-aligned;
+  // All-Star uses the reticle instead.
+  if (c.tier === 'pro' && (g === 'PERFECT' || g === 'GOOD' || g === 'EARLY' || g === 'LATE')) la += clamp((c.cross.z - 2.55) * 9, -9, 9);
   ev += (c.powerRating - 5) * 1.6;
   if (c.power) ev *= TUNING.timing.powerEv;
   if (c.starSwing && (g === 'PERFECT' || g === 'GOOD')) ev = c.maxEv;

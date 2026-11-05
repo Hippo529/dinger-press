@@ -4,10 +4,12 @@ import { fenceAt, STADIUMS, type StadiumId } from '../sim/field';
 import { FRAME_FLOATS, type ReplayRing } from '../fx/replay';
 import type { Layout } from './layout';
 
-export function drawReplay(ctx: CanvasRenderingContext2D, l: Layout, ring: ReplayRing, now: number, stadium: StadiumId): void {
-  const size = Math.min(l.portrait ? l.w * 0.42 : l.h * 0.42, 190);
+export function drawReplay(ctx: CanvasRenderingContext2D, l: Layout, ring: ReplayRing, now: number, stadium: StadiumId): { x: number; y: number; w: number; h: number } {
+  // Always below the HOME RUN banner row, sized to the space left above the bottom safe area.
+  const y0 = l.banner.y + l.banner.h + 30;
+  const room = l.h - l.insets.bottom - 12 - y0;
+  const size = Math.max(90, Math.min(l.portrait ? l.w * 0.42 : l.h * 0.42, 190, room));
   const x0 = l.w - l.insets.right - size - 14;
-  const y0 = l.scoreboard.y + l.scoreboard.h + 40;
   const st = STADIUMS[stadium];
   const sc = size / 470;
   const ox = x0 + size / 2, oy = y0 + size - 12;
@@ -90,4 +92,5 @@ export function drawReplay(ctx: CanvasRenderingContext2D, l: Layout, ring: Repla
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillText('INSTANT REPLAY', x0 + 6, y0 - 9);
+  return { x: x0, y: y0 - 18, w: size, h: size + 18 };
 }

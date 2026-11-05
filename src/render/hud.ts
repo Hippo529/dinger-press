@@ -229,7 +229,7 @@ export function drawChipsAndButtons(ctx: CanvasRenderingContext2D, l: Layout, s:
     ctx.fillText(`STAMINA ${Math.round(arm.stamina)}`, st.x, st.y - 6);
     out.push({ id: 'stamina', label: 'Stamina', rect: st });
     const stars = s.teams[fieldingTeam(s)].stars;
-    chip(ctx, l.star, '★', { on: s.starArmed, accent: THEME.sun, sub: `${stars}`, misreg, pressed: pressed.star, disabled: s.phase !== 'prePitch' || (stars === 0 && !s.starArmed), size: 22 });
+    chip(ctx, l.star, '★', { on: s.pitchStarArmed, accent: THEME.sun, sub: `${stars}`, misreg, pressed: pressed.star, disabled: s.phase !== 'prePitch' || (stars === 0 && !s.pitchStarArmed), size: 22 });
     out.push({ id: 'star', label: 'Star Pitch', rect: l.star });
   }
   const p = s.play;

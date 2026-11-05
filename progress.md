@@ -459,3 +459,33 @@ Per-screenshot notes (M6, all three viewports unless noted):
 - settings: panels with segmented controls ≥ 44 px; long, scrolls on phones.
 - binder: base roster cards filled, unearned ones "???"; text-only cards (stretch tier, minimal art).
 - clutch-intro: stamp title, situation table, goal and PLAY CARD; readable at 402 px.
+
+## M7 — independent review and fixes
+I ran the read-only reviewer (.claude/agents/reviewer.md) in a fresh context against SPEC, features, code and the M6 screenshots. It confirmed 12 gaps (plus 2 minor ones), concentrated where I had graded from text state instead of pixels, or where a test called a helper by hand.
+
+All fixed:
+1. PERFECT never awarded a star (the old test called `awardStars` directly). doSwing now awards +1 at contact; review.test.ts drives a real swing.
+2. A CPU Star Pitch cleared the batter's armed Star Swing (one shared flag). There are now separate `starArmed` / `pitchStarArmed` flags; tested through the sim.
+3. A Star Pitch only scaled vertical break ×1.35, and stamina never scaled it. D now uses the full break multiplier; tested on `makePitch`.
+4. The human pitch aim was unclamped. Aim is now held to the zone ±1.2 ft and the post-scatter target is clamped; tested.
+5. The HR ticker was overwritten by the extra-base line. Fixed; verify asserts a home-run line.
+6. The replay inset covered the HOME RUN banner on iPhone. It now always sits below the banner row; verify asserts the rects don't intersect on all 3 viewports.
+7. **Timing bar invisible in every screenshot.** Root cause: hit-stop freezes sim time, so the bar's age (sim time) stayed ~0 and its pop-in scale was 0. It now animates on real time, and the text state reports the renderer's `timingBarDrawn` flag, so verify can't pass without pixels.
+8. POWER stance had no visible change. Wider legs, lower crouch, more lean and a pink glow sprite along the bat; pose test plus screenshot.
+9. Rookie wasn't vertically auto-aligned on launch angle. The height shift is now Pro-only (test). The SPEC §3.2 table was out of date versus the tuned numbers and is updated to match the code.
+10. SPEC.md had a duplicated block from one of my own edits: the index match hit the Names table. Removed; there is now one Clutch table, matching the code.
+11. Prompts faded the whole box to ~50%. Only the accent plate pulses now. In landscape the prompt moved to the top-right row, clear of the zone and the release point. An intermediate placement covered the zone top; caught on the screenshot and moved again.
+12. Throw buttons covered home/first. The field camera lifts by 20% (portrait) while the throw diamond is up.
+13. Minor:
+    - pitchesSeen and firstRunDone now persist live on each human-batting pitch.
+    - The SPEC Pass the Proof wording now describes the tiebreak handoffs.
+    - The landscape lower third and the ticker no longer share rows with the prompt and the timing bar.
+Evidence: `npm test` 129/130 (F056 only); check 0 violations; audit 0 findings; `VERIFY: 79/79 scenarios, 0 page errors, 0 console errors, screenshots: artifacts/screens/M7`; `npm run screens -- M7` → 36/36.
+Bot numbers (final):
+- Perfect-timing Rookie: 69 HR / 137 swings = 50.4%.
+- Random tapper: on base 11/62 = 0.177.
+- Human-like HEAT 50, full 3-inning games: 45–81 pitches.
+- Max dead time: take→windup 0.76 s, dead→ready 0.91 s, HR→ready 2.41 s.
+- Fielding audit: 726 balls in play, 422 throws, 0 violations.
+- Clutch Card median: 39 s.
+Known issue (left for a human decision): F056, Clutch Card median 39 s against the 45–110 s band (brief: 60–90 s). Half-innings at this game's pace take 24–54 s; lengthening them would slow every mode.

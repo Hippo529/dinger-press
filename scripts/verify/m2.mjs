@@ -131,6 +131,10 @@ export const m2 = [
       s = await h.state();
       h.expect(s.replay.active && s.replay.frames >= 240, `replay running from the ring (${s.replay.frames} frames)`);
       await h.shot('homer-celebration');
+      const R = s.replay.rect, B = s.replay.bannerRect;
+      const hit = R && !(R.x > B.x + B.w || R.x + R.w < B.x || R.y > B.y + B.h || R.y + R.h < B.y);
+      h.expect(!hit, 'replay inset does not cover the HOME RUN banner: ' + JSON.stringify({ R, B }));
+      h.expect(s.ticker && !/wall|Two-bagger|extra bases/i.test(s.ticker), 'home-run chatter, not an extra-base line: ' + s.ticker);
       // any tap skips ceremony
       if (h.vp === 'desktop') await h.page.keyboard.press('Enter');
       else { const vs = h.page.viewportSize(); await h.page.touchscreen.tap(vs.width / 2, vs.height / 2); }
