@@ -36,6 +36,7 @@ export class Session implements Steppable {
   curBall: V3 | null = null;
   readonly eventLog: { type: string; t: number; real: number }[] = [];
   caption: { text: string; until: number } | null = null;
+  lastThrowBase: number | null = null;
   tutorialSeen: Set<string>;
   timeScaleLog: { t: number; scale: number; hr: boolean }[] = [];
 
@@ -100,6 +101,9 @@ export class Session implements Steppable {
     switch (e.type) {
       case 'pitchReleased':
         r.clearTrail();
+        break;
+      case 'throw':
+        this.lastThrowBase = e.base;
         break;
       case 'contact': {
         r.contactT = fx.now;

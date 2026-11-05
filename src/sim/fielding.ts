@@ -1,6 +1,6 @@
 // Automated fielding: deterministic intercept, coverage per fundamentals, throw decisions.
 import { TUNING } from '../config/tuning';
-import { BASES, B1, B2, B3, C, CF, HOME_POS, LF, P, RF, SS, dist2 } from './field';
+import { BASES, B1, B2, B3, C, CF, HOME_POS, LF, MOUND, P, RF, SS, dist2 } from './field';
 import type { Prediction } from './physics';
 import type { Fielder, Runner, V2 } from './types';
 
@@ -27,7 +27,7 @@ export function interceptFor(f: Fielder, idx: number, pred: Prediction): Interce
     const catchable = !p.air || p.z <= ft.catchHeight;
     if (!catchable) continue;
     // Catcher and pitcher don't chase balls that land deep.
-    const reach = ft.react + Math.hypot(f.pos.x - p.x, f.pos.y - p.y) / f.speed;
+    const reach = ft.react + (idx === P ? ft.pitcherReact : 0) + Math.hypot(f.pos.x - p.x, f.pos.y - p.y) / f.speed;
     if (reach <= p.t) {
       const air = p.air && p.z > 0.05;
       if (air && p.z > ft.catchHeight) continue;
@@ -46,6 +46,9 @@ export function bestIntercept(fielders: Fielder[], pred: Prediction): Intercept 
   for (let i = 0; i < fielders.length; i++) {
     const it = interceptFor(fielders[i], i, pred);
     if (!it) continue;
+    // Pitchers and catchers only take balls in their own territory (comebackers, dribblers, pop-ups).
+    if (fielders.length === 9 && i === P && Math.hypot(it.point.x - MOUND.x, it.point.y - MOUND.y) > 40) continue;
+    if (fielders.length === 9 && i === C && Math.hypot(it.point.x, it.point.y) > 35) continue;
     if (!best || it.t < best.t - 1e-9) best = it;
   }
   return best;

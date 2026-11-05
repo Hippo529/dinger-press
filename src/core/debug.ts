@@ -6,6 +6,7 @@ import type { App } from '../state/app';
 import { gameText } from '../state/textstate';
 import type { GameState } from '../sim/state';
 import type { Action } from '../sim/types';
+import { forceContact, putRunner, stageCloseCall } from './debugStage';
 
 type W = Window & Record<string, unknown>;
 
@@ -32,6 +33,10 @@ export function installHooks(app: App, debug: boolean, test: boolean): void {
         return bakeStats.count;
       },
       timeScaleLog: () => app.session?.timeScaleLog.slice() ?? [],
+      putRunner: (b: number) => app.session && putRunner(app.session.sim, b),
+      forceContact: (ev: number, la: number, spray: number) => app.session && forceContact(app.session.sim, ev, la, spray),
+      stageCloseCall: () => (app.session ? stageCloseCall(app.session.sim) : false),
+      lastThrow: () => app.session?.lastThrowBase ?? null,
       /** Offline render of key sounds for verify (RMS + crude spectral centroid). */
       audioTest: async () => {
         const OAC = window.OfflineAudioContext;

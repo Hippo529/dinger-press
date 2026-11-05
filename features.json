@@ -305,7 +305,7 @@
    "Unit test rules sequence",
    "Counts/outs as expected"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F029",
@@ -316,7 +316,7 @@
    "Unit test bases-loaded walk scores one",
    "Score +1, bases still loaded"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F030",
@@ -327,7 +327,7 @@
    "Unit tests: home leads after top 3 => over; bottom 3 go-ahead run => walkoff over immediately",
    "Both exact"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F031",
@@ -338,7 +338,7 @@
    "Unit test + verify via debug setState",
    "state gameOver with reason mercy"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F032",
@@ -349,7 +349,7 @@
    "Unit test with scripted tied game",
    "Runner on 2nd at start of each half in innings 4–6; tiebreak phase reached after 6; tiebreak winner = more HRs in 3 swings, then 1-swing rounds"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F033",
@@ -360,7 +360,7 @@
    "Unit test: grounder at spray −20° 85 mph LA −8; fly at spray +18° 95 mph LA 30",
    "Chaser is SS for grounder and RF or CF (min intercept) for fly; 1B covers first, 3B third, C home, SS or 2B covers second"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F034",
@@ -371,7 +371,7 @@
    "Unit tests on prediction",
    "Outcome texts match"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F035",
@@ -382,7 +382,7 @@
    "Unit test: runner on 1st, 0 out, GOOD grounder to SS",
    "Result is double play with text \"Two!\""
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F036",
@@ -393,7 +393,7 @@
    "verify: tap HOME button / press key 1 on throw prompt; and idle",
    "throwTarget equals tapped base; idle => assist target after 1.2±0.1 s"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F037",
@@ -404,7 +404,7 @@
    "Unit test double into gap with runner on 1st",
    "Runner on 1st reaches >=3rd; all runners stopped on bases at dead ball"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F038",
@@ -415,7 +415,7 @@
    "Unit test margins −0.5, −0.2, 0.2, 0.5 for player batting and CPU batting; verify prompt appears via debug-set scenario",
    "prompt only for |margin|<0.35 and only when player bats; untapped resolves to setting"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F039",
@@ -426,7 +426,7 @@
    "Unit test explain(): margin 0.1 safe, 1.5 out, gap hit with run scored, double play, diving catch, line drive no chance",
    "Each returns its documented string"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F040",
@@ -448,7 +448,7 @@
    "Sim 300 CPU at-bats vs fixed pitches at HEAT 0 and 99",
    "timing sd within ±15% of 120 and 35 ms; contact rate on in-zone swings ≥0.25 higher at 99"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F042",
@@ -459,7 +459,7 @@
    "Unit test 50 CPU pitches at HEAT 0 and 99",
    "No pitch outside repertoire; repeat rate <60%; mean target error at 99 ≤ half of HEAT 0"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F043",
@@ -470,7 +470,7 @@
    "Unit test CPU params identical across innings/scores",
    "Equal"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F044",
@@ -492,7 +492,7 @@
    "Unit test pitchFromCharge",
    "Speed lower early; error larger late"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F046",
@@ -503,7 +503,7 @@
    "Unit test steer clamp",
    "Final x within budget"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F047",
@@ -525,7 +525,7 @@
    "Unit test 10 same pitches, then alternate types",
    "Velocity decreases monotonically; stamina clamped 0–100; switching type restores ≥ half the lost velocity; HUD stamina rect present"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F049",
@@ -558,7 +558,7 @@
    "verify fresh storage: tap Play then Short Run; measure time to pitchReleased",
    "<=5 s; player is batting on first pitch"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F052",
@@ -569,7 +569,7 @@
    "Unit tests: foul is an out, called strike is an out, ball is free, ends at 10 outs; HRs of 400,410,420 ft at HEAT 0 with streak starting at 0 on first HR score 400+512.5+630=1542.5; PERFECT adds 100",
    "All exact"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F053",
@@ -591,7 +591,7 @@
    "Scripted Versus game with 6 halves and a mercy game",
    "handoffs = halves − 1 exactly; per-player HEAT applied to CPU pitcher flight time"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F055",
@@ -624,7 +624,7 @@
    "Unit test generator over 30 consecutive dates",
    "Same date => identical params; ≥20 distinct param sets across 30 dates; win check consistent with params"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F058",
@@ -657,7 +657,7 @@
    "Unit test leverage cases (bases loaded; RISP trailing last inning; empty early)",
    "prompt true for first two, false for third; success awards +2 stacked with other awards"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F061",
@@ -679,7 +679,7 @@
    "Unit test: grade function called with different RNG states gives equal output",
    "Equal"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F063",
@@ -690,7 +690,7 @@
    "Bot measures intervals over 3 full games; verify tap during HR celebration",
    "take/whiff→windup ≤0.8 s, dead→ready ≤1.2 s, HR→ready ≤3.5 s real; tap ends celebration within 1 frame"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F064",
@@ -789,7 +789,7 @@
    "Unit test endpoints 0→0, 1→1 and easeOutBack overshoot",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F073",
@@ -899,7 +899,7 @@
    "vitest contrast test",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F083",
@@ -932,7 +932,7 @@
    "check script grep",
    "0 occurrences"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F086",
@@ -954,7 +954,7 @@
    "Unit test roster data validity (12 base + 4 unlock, unique names, ratings 0–10, 2–4 pitches)",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F088",
@@ -1031,7 +1031,7 @@
    "verify title screenshot after 3 s",
    "attract pitches counted >0"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F095",
@@ -1064,7 +1064,7 @@
    "verify forced HR",
    "replay.active true during celebration; replay frame count ≥ 240 from ring"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F098",
@@ -1075,7 +1075,7 @@
    "verify debug panel exists",
    "panel has >=6 sliders"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F099",
@@ -1097,7 +1097,7 @@
    "verify: change setting, reload",
    "Setting retained"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F101",
@@ -1141,7 +1141,7 @@
    "Unit test Gutter fence: +30° 290–300 ft at 38 ft; 100 mph 25° pulled to RF hits wall below 38 ft => rebound",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F105",
@@ -1196,7 +1196,7 @@
    "verify dispatch visibility events",
    "paused true; overlay present"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F110",
@@ -1273,7 +1273,7 @@
    "vitest bot prints numbers",
    "HR rate 25–85%; random OBP <0.2; pitches 40–160"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F117",
@@ -1328,7 +1328,7 @@
    "Unit test sweep HEAT 0..99 for flight time, window multiplier, CPU sd",
    "Each strictly monotonic; max step between neighbours <2%; HEAT 0/50/99 flight = 0.85/0.65/0.50 s"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F122",
@@ -1350,7 +1350,7 @@
    "Unit test multiplier; check default settings",
    "HEAT 99 => 2.5; hidden => ×1.25; default hideLocator=false"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F124",
@@ -1372,7 +1372,7 @@
    "Unit test same play under both settings",
    "Aggressive takes extra base at margin 0.2; Conservative holds"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F126",
@@ -1383,7 +1383,7 @@
    "Unit test fly 320 ft with runner on 3rd, 1 out",
    "Run scores; batter out; text \"Sac fly\""
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F127",
@@ -1394,7 +1394,7 @@
    "Unit test each trait",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F128",

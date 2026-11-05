@@ -122,22 +122,22 @@ export function contactOut(g: Grade, c: ContactCtx, w: Windows): ContactOut {
     case 'EARLY':
     case 'LATE': {
       const q = clamp01((Math.abs(o) - w.good) / Math.max(1, w.foulFrom - w.good));
-      ev = lerp(80, 70, q);
-      la = lerp(10, -6, q);
+      ev = lerp(76, 64, q);
+      la = lerp(14, -10, q);
       spray = h * Math.sign(rel || (g === 'EARLY' ? -1 : 1)) * Math.max(Math.abs(spray), 32);
       break;
     }
     case 'JAMMED':
-      ev = 62;
+      ev = 58;
       la = 8;
       spray = h * 25; // opposite field (late-looking)
       break;
     case 'TOPPED':
-      ev = 72;
+      ev = 64;
       la = -12;
       break;
     case 'UNDER':
-      ev = 74;
+      ev = 70;
       la = 58;
       break;
     case 'FOUL':

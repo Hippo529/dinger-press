@@ -23,7 +23,7 @@ export class Sim {
   private events: SimEvent[] = [];
   /** Every applied action with its sim time (for replay / determinism tests). */
   readonly inputLog: Queued[] = [];
-  private ctx: Ctx;
+  readonly ctx: Ctx;
 
   constructor(cfg: ModeConfig) {
     this.rng = new Rng(cfg.seed);

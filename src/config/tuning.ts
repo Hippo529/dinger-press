@@ -27,7 +27,7 @@ export const TUNING = {
     flightHeat99: 0.5, // s, HEAT 99
     firstPitchFlight: 1.2, // first-ever pitch meatball, s
     windupS: 0.55, // windup duration before release, s
-    prePitchCpuS: 0.35, // CPU set time before windup, s
+    prePitchCpuS: 0.33, // CPU set time before windup, s (mid-at-bat)
     chargeFillS: 0.9, // charge ring fill time, s
     sweetLo: 0.72, // charge sweet band start (0..1)
     sweetHi: 0.88, // charge sweet band end
@@ -87,7 +87,7 @@ export const TUNING = {
   flash: { maxPerSecond: 3, homerAlpha: 0.35, misregJoltPx: 6, misregJoltMs: 150 },
   flow: {
     introS: 0.9, // walk-up lower third before first pitch of a PA (skippable), s
-    afterTakeS: 0.6, // take/whiff → next windup must start ≤ 0.8 s, s
+    afterTakeS: 0.42, // take/whiff dead time; + prePitchCpuS must keep next windup ≤ 0.8 s
     afterPlayS: 0.9, // ball dead → next pitch ready ≤ 1.2 s
     celebrateS: 2.4, // HR celebration sim time after fence (≤3.5 s real incl. slow-mo)
     halfEndS: 1.6, // inning transition banner, s
@@ -100,7 +100,8 @@ export const TUNING = {
   running: { baseSpeed: 23, perSpeed: 0.7, batterDelay: 0.25, conservative: 0.45, aggressive: 0.05, closeCall: 0.35, trotMult: 0.75 },
   fielding: {
     react: 0.22, // reaction delay, s
-    speedBase: 21, // ft/s
+    pitcherReact: 0.25, // extra for the pitcher's follow-through, s
+    speedBase: 24, // ft/s (MLB outfield sprint ≈ 27–30)
     perSpeed: 0.6,
     catchHeight: 7.5, // ft
     divingSlack: 0.2, // s
@@ -116,8 +117,8 @@ export const TUNING = {
     drag: 0.0018, // 1/ft  (a = -k|v|v); calibrated: 100mph@28° ≈ 396 ft, 110@30 ≈ 451 ft
     magnus: 0.0008, // lift factor (a = k·spin·|v|²)
     restitution: 0.42,
-    groundKeep: 0.62, // horizontal velocity kept on bounce
-    rollFriction: 14, // ft/s² rolling deceleration
+    groundKeep: 0.78, // horizontal velocity kept on bounce
+    rollFriction: 9, // ft/s² rolling deceleration
   },
   heat: { flightPiecewise: true, cpuSdMaxMs: 120, cpuSdMinMs: 35, scoreMult: 1.5, hiddenLocatorMult: 1.25 },
 };

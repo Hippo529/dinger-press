@@ -104,6 +104,12 @@ function makeHelpers(page, vp, scenarioName) {
     async tapRect(r) { await page.touchscreen.tap(r.x + r.w / 2, r.y + r.h / 2); },
     async clickRect(r) { await page.mouse.click(r.x + r.w / 2, r.y + r.h / 2); },
     async press(rOrSel) {
+      if (rOrSel && typeof rOrSel === 'object' && String(rOrSel.id || '').startsWith('ui:')) {
+        // DOM menu control: let Playwright scroll it into view like a user would, then tap/click.
+        const loc = page.locator(`[data-id="${rOrSel.id.slice(3)}"]`).first();
+        if (vp.name === 'desktop') await loc.click(); else await loc.tap();
+        return;
+      }
       if (typeof rOrSel === 'string') {
         if (vp.name === 'desktop') await page.click(rOrSel); else await page.tap(rOrSel);
       } else if (vp.name === 'desktop') await h.clickRect(rOrSel); else await h.tapRect(rOrSel);

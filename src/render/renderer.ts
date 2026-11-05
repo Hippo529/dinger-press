@@ -371,7 +371,7 @@ export class Renderer {
     else if (s.starChance && (s.phase === 'prePitch' || s.phase === 'windup')) drawPrompt(ctx, l, hb !== null ? '★ STAR CHANCE — HIT = +2★' : '★ STAR CHANCE', pulse, THEME.sun);
     else if (hp !== null && s.phase === 'prePitch') drawPrompt(ctx, l, s.cfg.assistPitch ? 'TAP THE ZONE TO PITCH' : 'HOLD IN THE ZONE · RELEASE IN THE GOLD', pulse, THEME.teal);
     else if (hp !== null && s.phase === 'pitch' && s.pitch && s.pitch.t / s.pitch.T < TUNING.pitch.steerUntilS) drawPrompt(ctx, l, 'DRAG ◀ ▶ TO STEER', pulse, THEME.teal);
-    drawLowerThird(ctx, l, s, m);
+    if (inBat) drawLowerThird(ctx, l, s, m);
     const age = rt - s.last.swingT;
     if ((hb !== null || s.cfg.cage) && age >= 0 && age < TUNING.timing.timingBarShowS) drawTimingBar(ctx, l.timingBar, s, this.settings.showTimingMs || !!s.cfg.cage, age);
     drawBanner(ctx, l, s, m);

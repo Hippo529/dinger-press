@@ -60,8 +60,8 @@ export function startPlay(c: Ctx, out: ContactOut, at: V3, g: Grade): void {
   // Situational explanation for clean hits.
   const landD = pred.land ? Math.hypot(pred.land.x, pred.land.y) : 0;
   if (!it.air) {
-    if (out.la >= 5 && out.la <= 25 && out.ev >= 92 && landD > 150) play.text = 'LINE DRIVE — no chance!';
-    else if (landD > 230) play.text = 'In the gap!';
+    if (landD > 230) play.text = 'In the gap!';
+    else if (out.la >= 5 && out.la <= 25 && out.ev >= 92 && landD > 150) play.text = 'LINE DRIVE — no chance!';
     else if (out.la < 5 && Math.hypot(it.point.x, it.point.y) > 160) play.text = 'Through the hole!';
   } else if (play.diving) play.text = 'Diving catch!';
 }

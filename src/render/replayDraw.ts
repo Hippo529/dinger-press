@@ -45,20 +45,24 @@ export function drawReplay(ctx: CanvasRenderingContext2D, l: Layout, ring: Repla
   // ball track up to the current replay frame
   const off = ring.frameAt(now);
   const b = ring.buf;
-  ctx.strokeStyle = THEME.ball;
+  const frames = b.length / FRAME_FLOATS;
+  const cur = off / FRAME_FLOATS;
+  const upto = (cur - ring.playFrom + frames) % frames;
+  ctx.strokeStyle = THEME.ink;
   ctx.lineWidth = 2;
+  ctx.setLineDash([4, 3]);
   ctx.beginPath();
   let first = true;
-  const startIdx = ring.playFrom * FRAME_FLOATS;
-  for (let k = startIdx, n = 0; n < ring.playFrames; n += 4, k = (k + FRAME_FLOATS * 4) % b.length) {
+  for (let n = 0; n <= upto; n += 3) {
+    const k = ((ring.playFrom + n) % frames) * FRAME_FLOATS;
     if (b[k + 4] !== 1) continue;
     const [px, py] = P(b[k + 1], b[k + 2]);
     if (first) ctx.moveTo(px, py);
     else ctx.lineTo(px, py);
     first = false;
-    if (k === off || Math.abs(k - off) < FRAME_FLOATS * 4) break;
   }
   ctx.stroke();
+  ctx.setLineDash([]);
   // fielders as ink dots at the replay frame
   ctx.fillStyle = THEME.ink;
   for (let i = 0; i < 9; i++) {
@@ -69,7 +73,7 @@ export function drawReplay(ctx: CanvasRenderingContext2D, l: Layout, ring: Repla
   }
   if (b[off + 4] === 1) {
     const [px, py] = P(b[off + 1], b[off + 2]);
-    const r = 3 + b[off + 3] * sc * 0.4;
+    const r = 3 + Math.min(4, b[off + 3] * 0.04); // a little bigger while high
     ctx.fillStyle = THEME.ball;
     ctx.beginPath();
     ctx.arc(px, py, r, 0, Math.PI * 2);

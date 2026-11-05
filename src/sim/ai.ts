@@ -21,8 +21,8 @@ export function cpuParams(heat: number): CpuParams {
   const h = TUNING.heat;
   return {
     sdMs: lerp(h.cpuSdMaxMs, h.cpuSdMinMs, d),
-    zoneSwing: lerp(0.6, 0.86, d),
-    chaseSwing: lerp(0.38, 0.16, d),
+    zoneSwing: lerp(0.55, 0.74, d),
+    chaseSwing: lerp(0.36, 0.18, d),
     zoneRate: lerp(0.6, 0.66, d),
     accuracyFt: lerp(0.55, 0.2, d),
     edgeBias: lerp(0.15, 0.8, d),
@@ -40,7 +40,8 @@ export function cpuSwing(rng: Rng, heat: number, cross: { x: number; z: number }
   const p = cpuParams(heat);
   const zone = inZone(cross.x, cross.z, 0.08);
   let prob = zone ? p.zoneSwing : p.chaseSwing;
-  if (strikes === 2) prob += 0.12;
+  if (strikes === 2) prob += 0.14;
+  else if (strikes === 0 && balls === 0) prob -= 0.15; // first-pitch patience
   if (balls === 3 && !zone) prob -= 0.15;
   const swing = rng.chance(clamp(prob, 0, 0.97));
   const sd = p.sdMs * (starPitch ? 1.5 : 1);

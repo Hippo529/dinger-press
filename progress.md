@@ -371,3 +371,40 @@ Screenshots (M1):
 - first-pitch-*: meatball cue, lower third and nameplates no longer overlap; the zone is ~120 px wide on iPhone portrait. Landscape: the lower third covers the batter's torso, which is acceptable, but the prompt pulses over the pitcher.
 - perfect-freeze-*: ball at the plate with sparks and "107 mph · 424 ft". The bat was still raised in the first take; fixed by starting the swing at the contact pose.
 Known issues / next: M2 rule/fielding/running tests and scenarios, throw prompt, inning change, mercy, game over → restart.
+
+## M2 — full rules and Short Run
+Done:
+- Rules: count, walks with forced runners, strikeouts, half/inning flow, mercy (lead > 5 after the 1st/2nd), walk-off, extras 4–6 with a runner on 2nd, 3-swing sudden death then 1-swing rounds.
+- Fielding: min-intercept chaser (P/C limited to their own territory), coverage, cutoff relay, throws chosen by best margin with lead-runner preference, double plays by re-evaluation, tag-ups and sac flies, explanations.
+- Player fielding: 1B/2B/3B/HOME buttons and keys 1–4, a 1.2 s assist; SEND/HOLD on close calls only when the player bats.
+- Debug staging helpers (`__game.forceContact/putRunner/stageCloseCall`) drive the real play code for rare situations.
+- Evidence: `npm test` 70/71 (the 1 failing is F056, below); check 0 violations; `VERIFY: 38/38` before the staging fix and then send-hold 3/3 after it.
+- Bot numbers (tests/bot.test.ts):
+  - Perfect-timing Rookie: 33 HR / 83 swings = 39.8%.
+  - Random tapper: on base 10 / 64 PA = 0.156.
+  - Human-like HEAT 50, full 3-inning games: 46–82 pitches.
+  - Max dead time: take→windup 0.76 s, dead→ready 0.91 s, HR→ready 2.41 s.
+  - No runner idled between bases.
+Tuning changes driven by evidence:
+- Grounders were too slow: an 85 mph ball took 2 s to reach 104 ft. Bounce speed kept 0.62→0.78, roll friction 14→9, and the pitcher gets +0.25 s react for the follow-through.
+- Fielder base speed 21→24 ft/s; SS/2B moved to ±16° (real depth).
+- Weak-contact EV lowered (EARLY/LATE 76→64, JAMMED 58, TOPPED 64, UNDER 70).
+- Take dead time 0.6→0.42 s and CPU set time 0.35→0.33 s (the bot measured 0.97 s take→windup).
+- CPU batters: first-pitch patience; zone swing 55–74%, chase 36–18%.
+Tests / steps that were wrong, said here rather than bending code:
+- F033 step said the −20° grounder goes to the SS. Under the min-intercept rule the 3B (112 ft deep) cuts it off first, which is also real fundamentals. The test asserts B3 at −20° and SS at −12°.
+- F116 "pitches per 3-inning game": games that end after the top of the 3rd (home leading) are 2.5 innings, so the band applies to games with all six halves.
+- The random-timing bot taps uniformly over windup + flight. Taps during the windup do nothing, as for a real player. Over flight only, OBP is ~0.23, because Rookie's ±100 ms GOOD window over a 0.85 s flight means ~17% of random swings are GOOD or better. That is a property of the brief's numbers.
+- **Open: F056 (Clutch Cards 45–110 s median) fails, at 31 s.** First I redesigned the cards:
+  - Cards now start with 0–1 outs, and the pitching cards allow a run.
+  - Moonshot or Bust gets 5 swings.
+  - Result: the median rose from 13 to 31 s.
+  - Cards still end the moment the win or loss check is met, often within 2–4 at-bats.
+  - Revisit in M5 rather than loosen the band.
+Screenshots (M2):
+- throw-prompt-*: the 2B/3B/1B/HOME diamond is big and clear; the lower third was lingering over the field view (fixed).
+- homer-celebration-desktop: banner, confetti and replay inset work; the replay ball was a huge disc and its track was missing (fixed). The camera looks at the wall, not the ball, during the celebration, which is fine.
+- game-over-*: results line score readable.
+- settings-*: long panel scrolls; landscape needed the title logo sized by dvh (fixed).
+- inning-transition-*: banner over the field view is OK.
+Next: M3 feel/audio unit tests (hit-stop ordering, shake bounds, feedback table, governor, pool, popups, audio variation, offline audio render), then M4 art/personality (chatter bank, lower thirds/walk-up, pitch tells in the Cage), then M5 modes UI.
