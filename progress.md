@@ -408,3 +408,24 @@ Screenshots (M2):
 - settings-*: long panel scrolls; landscape needed the title logo sized by dvh (fixed).
 - inning-transition-*: banner over the field view is OK.
 Next: M3 feel/audio unit tests (hit-stop ordering, shake bounds, feedback table, governor, pool, popups, audio variation, offline audio render), then M4 art/personality (chatter bank, lower thirds/walk-up, pitch tells in the Cage), then M5 modes UI.
+
+## M3 — feel and audio
+Done:
+- Chatter bank: 51 lines in 15 situations, picker never repeats back-to-back. Shown as a "GUS ▸" ticker strip.
+- Trail and squash moved into a pure module (render/trail.ts). The contact squash is the brief's exact 0.7/1.3; in-flight stretch preserves area.
+- Tests:
+  - tests/feel.test.ts (23): hit-stop ordering and caps, shake bounds and 50% scaling, slow-mo only on HR/walk-off over a bot game, feedback table, particle pool, popups, flash governor, poses, projection, audio rules, audio session, haptics, save/migration/save code, unlocks, boards, CSS discipline.
+  - tests/hud.test.ts (4): mock-context checks that count/timing/zone are not colour-only, and that particles and popups never cover the ball.
+- Verify, new in scripts/verify/m3.mjs:
+  - audio: unlock to `running`, audio log, OfflineAudioContext RMS, crack brighter at 110 than 70 mph
+  - render discipline: bake count constant over 20 s of play, DPR cap, offline fonts
+  - HUD/input: lower third + locator timing, STAR chip + Star Pitch tell, real touch hold-to-charge (sweet band), assist tap, Cage tells + ms readout, tutorial captions
+  - platform/accessibility: full bot game in the browser + restart, safe-area insets, no scroll, keyboard-only flow, ≥44 px targets + lefty mirror, tiers incl. reticle above the thumb
+- Evidence: `npm test` 100/101 (F056 open); check 0 violations; `VERIFY: 58/58 scenarios, 0 page errors, 0 console errors, screenshots: artifacts/screens/M3`.
+Findings:
+- Playwright's `iPhone 17 Pro` CSS viewport is 402×681 (browser chrome excluded), not 874. My hard-coded touch y=640 hit the pitch chips. Scenarios now aim through the layout's plane mapping. Worth checking on device: the bottom chips sit in the lower 10% of the visible area.
+- Menus now autofocus their first control in every mode (keyboard users need it). Test mode had skipped it.
+Screenshots (M3):
+- cage-*: four pitch types with their trail tints. KN shows the flutter seam-less ball; CU's sun trail reads well. The ball's ground shadow leads it, which is correct perspective, not a bug.
+- walk-up-*: the first capture caught the lower third mid-slide (a dark box at the edge). The scenario now waits 350 ms.
+Next: M4 art pass (pitcher/fielder poses on throws, stadium variety, menus polish), then M5 modes UI (Mill/Proof handoff scenarios, derby streak, Clutch card intro), with F056 revisited there.

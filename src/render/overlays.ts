@@ -320,3 +320,29 @@ export function drawHandoff(ctx: CanvasRenderingContext2D, l: Layout, name: stri
   ctx.fillText(age < 0.4 ? 'hold on…' : 'TAP WHEN READY', l.w / 2, l.h * 0.55);
   ctx.restore();
 }
+
+/** Broadcast ticker: "GUS ▸ line" printed strip near the bottom (never over the chips). */
+export function drawTicker(ctx: CanvasRenderingContext2D, l: Layout, text: string, misreg: number): void {
+  const x = l.lefty ? l.power.x + l.power.w + 12 : l.insets.left + 12;
+  const maxW = (l.lefty ? l.w - l.insets.right - 12 : l.power.x - 12) - x;
+  const y = l.portrait ? l.h - l.insets.bottom - 112 : l.h - l.insets.bottom - 64;
+  ctx.save();
+  ctx.font = `700 ${l.portrait ? 12 : 13}px ${FONTS.ui}`;
+  const label = 'GUS ▸ ';
+  let t = text;
+  while (ctx.measureText(label + t).width > maxW - 16 && t.length > 4) t = t.slice(0, -2);
+  if (t !== text) t = t.slice(0, -1) + '…';
+  const w = Math.min(maxW, ctx.measureText(label + t).width + 16);
+  ctx.fillStyle = THEME.teal;
+  ctx.fillRect(x + misreg, y + misreg, w, 26);
+  ctx.fillStyle = THEME.paper;
+  ctx.fillRect(x, y, w, 26);
+  ctx.strokeStyle = INK;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(x, y, w, 26);
+  ctx.fillStyle = INK;
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label + t, x + 8, y + 14);
+  ctx.restore();
+}

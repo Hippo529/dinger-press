@@ -19,6 +19,7 @@ import { drawBanner, drawCharge, drawHandoff, drawLocator, drawLowerThird, drawP
 import { drawReplay } from './replayDraw';
 import { drawField, drawWallNumbers } from './world';
 import { easeOutCubic } from '../core/easing';
+import { TrailRing, squash } from './trail';
 
 export interface RenderSettings {
   showLocator: boolean;
@@ -27,7 +28,6 @@ export interface RenderSettings {
 }
 
 const PJ: Proj = { x: 0, y: 0, s: 0, depth: 0 };
-const TRAIL_N = 12;
 
 export class Renderer {
   readonly ctx: CanvasRenderingContext2D;
@@ -43,9 +43,7 @@ export class Renderer {
   camTarget = { x: 0, y: 120 };
   private bakeKey = '';
   private bake: HTMLCanvasElement | null = null;
-  readonly trail = new Float32Array(TRAIL_N * 2);
-  trailN = 0;
-  private trailHead = 0;
+  readonly trail = new TrailRing();
   buttons: HudButton[] = [];
   pressed: Record<string, number> = {};
   ballScreen = { x: 0, y: 0, r: 4, visible: false };
@@ -88,14 +86,8 @@ export class Renderer {
     return c;
   }
 
-  private pushTrail(x: number, y: number): void {
-    this.trail[this.trailHead * 2] = x;
-    this.trail[this.trailHead * 2 + 1] = y;
-    this.trailHead = (this.trailHead + 1) % TRAIL_N;
-    this.trailN = Math.min(TRAIL_N, this.trailN + 1);
-  }
   clearTrail(): void {
-    this.trailN = 0;
+    this.trail.clear();
   }
 
   /** Main entry. `rt` = render sim time (s.time + interpolation), `ballPos` = interpolated batted-ball position. */
@@ -280,37 +272,34 @@ export class Renderer {
     if (PJ.depth < 1) return;
     const r = Math.max(3.5, 0.13 * PJ.s);
     const bx = PJ.x + this.fx.vibration(), by = PJ.y;
-    // trail
-    this.pushTrail(bx, by);
-    if (this.trailN > 2) {
+    // trail: last 12 positions, tapering width/alpha, thicker when fast
+    const tr = this.trail;
+    tr.push(bx, by);
+    if (tr.n > 2) {
       ctx.lineCap = 'round';
-      for (let i = 1; i < this.trailN; i++) {
-        const a = (this.trailHead - this.trailN + i - 1 + TRAIL_N * 2) % TRAIL_N;
-        const b2 = (a + 1) % TRAIL_N;
-        const k = i / this.trailN;
+      for (let i = 1; i < tr.n; i++) {
+        const [ax, ay] = tr.at(i - 1);
+        const [cx2, cy2] = tr.at(i);
+        const k = i / tr.n;
         ctx.globalAlpha = k * 0.55;
         ctx.strokeStyle = tint;
-        ctx.lineWidth = Math.max(1, r * 1.4 * k);
+        ctx.lineWidth = Math.max(1, (TUNING.trail.baseWidthPx * 0.3 + r * 1.1) * k);
         ctx.beginPath();
-        ctx.moveTo(this.trail[a * 2], this.trail[a * 2 + 1]);
-        ctx.lineTo(this.trail[b2 * 2], this.trail[b2 * 2 + 1]);
+        ctx.moveTo(ax, ay);
+        ctx.lineTo(cx2, cy2);
         ctx.stroke();
       }
       ctx.globalAlpha = 1;
     }
-    // squash/stretch: along screen velocity, area preserved
-    const prevI = (this.trailHead - 2 + TRAIL_N) % TRAIL_N;
-    const vx = bx - this.trail[prevI * 2], vy = by - this.trail[prevI * 2 + 1];
-    const sp = Math.hypot(vx, vy);
-    const contactAge = this.fx.now - this.contactT;
-    let sx = 1, ang = Math.atan2(vy, vx);
-    if (contactAge >= 0 && contactAge < 0.034) {
-      sx = TUNING.squash.ballContact[0];
-    } else if (sp > r * 1.2) sx = Math.min(TUNING.squash.stretchMax, 1 + sp / (r * 12));
+    // squash/stretch along screen velocity, area preserved
+    const [px0, py0] = tr.n >= 2 ? tr.at(tr.n - 2) : [bx, by];
+    const vx = bx - px0, vy = by - py0;
+    const ang = Math.atan2(vy, vx);
+    const { sx, sy } = squash(Math.hypot(vx, vy), r, this.fx.now - this.contactT);
     ctx.save();
     ctx.translate(bx, by);
     ctx.rotate(ang);
-    ctx.scale(sx, 1 / sx);
+    ctx.scale(sx, sy);
     ctx.beginPath();
     ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.fillStyle = THEME.ball;

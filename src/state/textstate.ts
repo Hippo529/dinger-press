@@ -1,7 +1,7 @@
 // render_game_to_text(): everything needed to play blind, as concise JSON.
 import { ROSTER_BY_ID, TEAMS } from '../config/roster';
 import { TUNING } from '../config/tuning';
-import { crossing, pitchPos, pitchVel } from '../sim/pitch';
+import { chargeOutcome, crossing, pitchPos, pitchVel } from '../sim/pitch';
 import { leverage } from '../sim/stars';
 import { activeTier, battingTeam, currentBatterId, currentPitcherId, humanBatter, humanPitcher, type GameState } from '../sim/state';
 import { bakeStats } from '../render/bake';
@@ -35,6 +35,7 @@ export function gameText(app: App): string {
     audio: { state: app.audio.ctx?.state ?? 'none', unlocked: app.audio.unlocked, logSize: app.audio.log.length },
     paused: app.hidden,
     caption: sess?.caption && sess.caption.until > fx.now ? sess.caption.text : null,
+    ticker: sess?.ticker && sess.ticker.until > fx.now ? sess.ticker.text : null,
     bakeCount: bakeStats.count,
     frames: rend.frames,
     attractPitches: app.attract?.sim.s.totalPitches ?? 0,
@@ -83,6 +84,7 @@ export function gameText(app: App): string {
     aim: { x: r1(s.aim.x * 100) / 100, z: r1(s.aim.z * 100) / 100 },
     pitchSel: s.pitchSel,
     charging: s.charging,
+    charge: { level: Math.round(s.chargeLevel * 100) / 100, quality: s.cfg.assistPitch ? 'assist' : chargeOutcome(s.chargeLevel).quality },
     stamina: Math.round(s.teams[1 - bt].arm.stamina),
     prompts,
     banner: s.banner && s.time - s.banner.t < 1.6 ? { text: s.banner.text, sub: s.banner.sub } : null,

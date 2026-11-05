@@ -217,7 +217,7 @@
    "verify: force PERFECT via debug act, screenshot",
    "render_game_to_text lastEv/lastDist set; text visible in screenshot"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F021",
@@ -261,7 +261,7 @@
    "Unit test grade with reticle offsets; verify drag+release",
    "Grades match; reticle rect in render_game_to_text is above touch point"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F025",
@@ -481,7 +481,7 @@
    "verify iPhone: tap chip, press-hold, release at sweet band",
    "Pitch released with charge quality \"perfect\""
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F045",
@@ -514,7 +514,7 @@
    "verify with assist on",
    "pitch released on single tap"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F048",
@@ -536,7 +536,7 @@
    "Screenshots of 4 pitch types in The Cage",
    "Trail tints differ; documented in render code"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F050",
@@ -547,7 +547,7 @@
    "verify: bot via __game finishes a game; restart button returns to play; bot also finishes Mill, Proof, a Clutch Card and a Cage session in vitest",
    "state gameOver then play; each mode reaches its end state"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F051",
@@ -635,7 +635,7 @@
    "verify Cage swing shows \"±NN ms\"",
    "render_game_to_text timingBar.ms shown"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F059",
@@ -646,7 +646,7 @@
    "Unit test awards incl. PERFECT double (+2) and cap; verify STAR chip tap",
    "Counts exact; chip tap sets starArmed and decrements on release"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F060",
@@ -668,7 +668,7 @@
    "Unit tests: Star Swing GOOD gives max EV; Star Pitch break = 1.8×; CPU uses Star Pitch only with ≥2 stars and high leverage",
    "All pass; audio log has starPitchTell at release"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F062",
@@ -712,7 +712,7 @@
    "verify explainer appears on first Short Run and Skip works",
    "state play after skip"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F066",
@@ -723,7 +723,7 @@
    "check: grep for magic numbers in fx modules references tuning",
    "Review + debug panel changes take effect next event"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F067",
@@ -734,7 +734,7 @@
    "Unit test fx hitstop durations and ordering; verify PERFECT freeze screenshot",
    "Durations match; sim time unchanged across freeze; fx records ≥1 rendered frame of contact before timeScale=0"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F068",
@@ -745,7 +745,7 @@
    "Unit test shake offsets bound; trauma suppressed during pitch",
    "Assertions pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F069",
@@ -756,7 +756,7 @@
    "verify forced HR: timeScale sampled; bot game logs min timeScale per play",
    "timeScale 0.35 then 1 on HR; never <1 outside hit-stop on non-HR plays"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F070",
@@ -767,7 +767,7 @@
    "Screenshots PERFECT freeze vs field follow",
    "Shadow visible; camera mode changes"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F071",
@@ -778,7 +778,7 @@
    "Unit test feedback table",
    "All 9 grades have label, ≥1 sound layer, hit-stop ms, particle count, popup text; calling twice yields identical params"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F072",
@@ -800,7 +800,7 @@
    "Unit test pool",
    "Live count never exceeds 300; pool array identity constant"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F074",
@@ -811,7 +811,7 @@
    "verify with reducedMotion emulation; unit test shake at 50%",
    "setting defaults on; shake offset 0, no zoom punch, no slow-mo (timeScale ≥1 except hitstop), flash count 0; 50% halves offset"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F075",
@@ -822,7 +822,7 @@
    "Unit test governor",
    "4th flash in 1 s rejected"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F076",
@@ -833,7 +833,7 @@
    "Unit test HUD spec: count uses filled/empty pips + letters, timing marker has shape per side, zone marker has outline",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F077",
@@ -844,7 +844,7 @@
    "verify: tap, then read AudioContext.state",
    "state === running; audio log contains unlock"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F078",
@@ -855,7 +855,7 @@
    "OfflineAudioContext render of crack at EV 70 and 110, mitt, organ, chime in verify; at-bat log",
    "each RMS > 0.01; crack at 110 has higher spectral centroid than at 70; log includes crack, mitt, crowd, organ, chime, walkup"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F079",
@@ -866,7 +866,7 @@
    "Unit test variation picker and semitone math",
    "Assertions pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F080",
@@ -877,7 +877,7 @@
    "verify reads __game.log",
    "non-empty with names"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F081",
@@ -910,7 +910,7 @@
    "iPhone screenshot; unit test occlusion rule in fx layer",
    "Zone >=70 px wide; during release→contact no popup/particle/trail rect overlaps ball rect (fx test over 50 pitches)"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F084",
@@ -921,7 +921,7 @@
    "verify reads __game.bakeCount before and after 20 s play",
    "bake count unchanged during play; increments on resize"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F085",
@@ -943,7 +943,7 @@
    "Unit test pose function for windup/swing/follow/celebrate/idle at t=0 and t=1; screenshots",
    "Poses differ (limb angles change ≥20°); 5 silhouettes have distinct scale/torso params"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F087",
@@ -965,7 +965,7 @@
    "verify with fonts route aborted",
    "game reaches play within 2 s after font timeout; no errors"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F089",
@@ -976,7 +976,7 @@
    "Grep CSS uses theme variables only; screenshots",
    "No hex colours in ui CSS outside theme; screenshots reviewed in progress.md"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F090",
@@ -987,7 +987,7 @@
    "Unit test project(): point on camera axis maps to centre; farther point smaller scale",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F091",
@@ -998,7 +998,7 @@
    "Unit test bank size and no consecutive repeat over 500 draws",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F092",
@@ -1009,7 +1009,7 @@
    "verify: lowerThird in render_game_to_text at PA start; screenshot",
    "lowerThird.name equals batter; catchphrase non-empty"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F093",
@@ -1042,7 +1042,7 @@
    "Unit test ball squash keeps area (sx*sy≈1 ±0.02); trail ring holds exactly 12 points",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F096",
@@ -1053,7 +1053,7 @@
    "Unit test popup timeline total <1 s",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F097",
@@ -1086,7 +1086,7 @@
    "Unit test migration v0->v1 and throwing storage",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F100",
@@ -1119,7 +1119,7 @@
    "Unit test: 10 HR unlocks Sir Relish, 25 PERFECT Bleep, Clutch win Spooky, Mill ≥3000 Big Mama, a 400+ ft HR The Gutter; trails unlock; no currency fields in save",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F103",
@@ -1130,7 +1130,7 @@
    "Unit test top-5 insert/sort for all 5 boards with HEAT multiplier applied to scores",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F104",
@@ -1152,7 +1152,7 @@
    "verify with injected safe-area padding CSS vars",
    "meta present; all HUD button rects inside viewport minus insets"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F106",
@@ -1163,7 +1163,7 @@
    "Inspect + verify page does not scroll on touch drag",
    "scrollY stays 0"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F107",
@@ -1185,7 +1185,7 @@
    "verify canvas.width on iPhone (dpr 3)",
    "width == cssWidth*2"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F109",
@@ -1207,7 +1207,7 @@
    "Unit test with mocked navigator.audioSession and none",
    "ambient when off, playback when on; no throw when API missing"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F111",
@@ -1218,7 +1218,7 @@
    "Unit test haptics with fake DOM: off => no element; on => label click invoked inside handler",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F112",
@@ -1251,7 +1251,7 @@
    "verify keyboard-only flow title→Short Run→pitch swing (Space)→Esc pause→Enter resume→M mute",
    "each step changes state"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F115",
@@ -1262,7 +1262,7 @@
    "verify: all button rects in render_game_to_text",
    "every rect w,h ≥44 css px; left-handed setting mirrors POWER/STAR x about centre"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F116",
@@ -1361,7 +1361,7 @@
    "verify: state at 30% and 50% of flight",
    "locator null at 30%, set within 0.05 ft of final crossing at 50%"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F125",

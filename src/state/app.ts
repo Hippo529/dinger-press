@@ -10,7 +10,7 @@ import { ReplayRing } from '../fx/replay';
 import { Haptics, isStandalone, prefersReducedMotion, readInsets, requestPersist, toggleFullscreen, viewportSize } from '../platform/ios';
 import { computeLayout } from '../render/layout';
 import { Renderer } from '../render/renderer';
-import { drawPrompt } from '../render/overlays';
+import { drawPrompt, drawTicker } from '../render/overlays';
 import { THEME } from '../config/theme';
 import { SaveStore, type StorageLike } from '../save/save';
 import { attract, cage, clutch, mill, proof, shortRun, type CommonOpts } from '../sim/modes';
@@ -91,7 +91,7 @@ export class App implements InputHost, UiHost {
       const el = buildScreen(t, this);
       this.ui.append(el);
       const first = el.querySelector<HTMLElement>('button');
-      if (first && !this.testMode) first.focus({ preventScroll: true });
+      if (first) first.focus({ preventScroll: true });
     }
   }
 
@@ -309,6 +309,9 @@ export class App implements InputHost, UiHost {
     const rdt = Math.max(0, Math.min(0.5, this.fx.now - this.lastDraw));
     this.lastDraw = this.fx.now;
     this.renderer.render(s, s.time + alpha * DT, sess.ballAt(alpha), rdt, sess !== this.attract);
+    if (t === 'play' && this.session?.ticker && this.session.ticker.until > this.fx.now && this.session.sim.s.phase !== 'handoff') {
+      drawTicker(this.renderer.ctx, this.renderer.layout, this.session.ticker.text, this.fx.misreg());
+    }
     if (t === 'play' && this.session?.caption && this.session.caption.until > this.fx.now) {
       const l = this.renderer.layout;
       drawPrompt(this.renderer.ctx, { ...l, prompt: { ...l.prompt, y: l.prompt.y + 44 } }, this.session.caption.text, 0, THEME.teal);

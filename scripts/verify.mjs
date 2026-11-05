@@ -52,7 +52,7 @@ async function main() {
         page.on('console', (m) => {
           if (m.type() !== 'error') return;
           const text = m.text();
-          if (IGNORED.some((r) => r.test(text))) return;
+          if (IGNORED.some((r) => r.test(text)) || (sc.ignoreConsole && sc.ignoreConsole.test(text))) return;
           consoleErrors++; errs.push('console.error: ' + text);
         });
         const helpers = makeHelpers(page, vp, sc.name);

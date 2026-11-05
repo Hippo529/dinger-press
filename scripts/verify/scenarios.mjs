@@ -1,6 +1,7 @@
 // Verify scenarios. Each: { name, viewports?, run(h) } — h from verify.mjs makeHelpers.
 import { helpers } from './lib.mjs';
 import { m2 } from './m2.mjs';
+import { m3 } from './m3.mjs';
 
 export const scenarios = [
   {
@@ -125,4 +126,5 @@ export const scenarios = [
     },
   },
   ...m2,
+  ...m3,
 ];

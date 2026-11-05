@@ -12,6 +12,8 @@ import type { ReplayRing } from '../fx/replay';
 import type { AudioDirector } from '../audio/director';
 import type { Renderer } from '../render/renderer';
 import type { Steppable } from '../core/loop';
+import { ChatterPicker } from '../config/chatter';
+import { ROSTER_BY_ID } from '../config/roster';
 
 export interface SessionDeps {
   fx: Fx;
@@ -37,6 +39,8 @@ export class Session implements Steppable {
   readonly eventLog: { type: string; t: number; real: number }[] = [];
   caption: { text: string; until: number } | null = null;
   lastThrowBase: number | null = null;
+  ticker: { text: string; until: number } | null = null;
+  readonly chatter = new ChatterPicker();
   tutorialSeen: Set<string>;
   timeScaleLog: { t: number; scale: number; hr: boolean }[] = [];
 
@@ -82,6 +86,51 @@ export class Session implements Steppable {
     for (const e of this.sim.drainEvents()) this.handle(e);
   }
 
+  private say(key: string, vars: Record<string, string> = {}): void {
+    const text = this.chatter.pick(key, vars);
+    if (text) this.ticker = { text, until: this.d.fx.now + 2.6 };
+  }
+
+  private chat(e: SimEvent): void {
+    const s = this.sim.s;
+    switch (e.type) {
+      case 'paStart':
+        if (s.totalPitches > 0) this.say('paStart', { name: ROSTER_BY_ID[e.batter]?.name ?? '' });
+        break;
+      case 'homeRun':
+        this.say(e.walkoff ? 'walkoff' : 'homeRun');
+        break;
+      case 'strikeout':
+        this.say('strikeout');
+        break;
+      case 'walk':
+        this.say('walk');
+        break;
+      case 'hit':
+        this.say(e.bases >= 2 ? 'extraBase' : 'hit');
+        break;
+      case 'caught':
+        if (e.diving) this.say('diving');
+        break;
+      case 'starChance':
+        this.say('starChance');
+        break;
+      case 'chatter':
+        this.say(e.key);
+        break;
+      case 'halfEnd':
+        this.say('halfEnd');
+        break;
+      case 'gameOver':
+        this.say(e.reason === 'mercy rule' ? 'mercy' : e.reason === 'walk-off' ? 'walkoff' : 'gameOver');
+        break;
+      case 'banner':
+        if (e.text === 'DOUBLE PLAY') this.say('doublePlay');
+        else if (/out$/i.test(e.text)) this.say('out');
+        break;
+    }
+  }
+
   private showCaption(key: string): void {
     if (!this.tutorialOn || this.tutorialSeen.has(key)) return;
     this.tutorialSeen.add(key);
@@ -92,6 +141,7 @@ export class Session implements Steppable {
     const s = this.sim.s;
     const { fx, renderer: r, parts, pops, audio } = this.d;
     this.eventLog.push({ type: e.type, t: s.time, real: fx.now });
+    this.chat(e);
     if (this.eventLog.length > 600) this.eventLog.splice(0, 200);
     fx.onEvent(e, { hrPredicted: !!s.play?.hr });
     audio.onEvent(e, s);
