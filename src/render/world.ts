@@ -36,7 +36,7 @@ function front(cam: Camera, x: number, y: number): { x: number; y: number } {
   return y < minY ? { x, y: minY } : { x, y };
 }
 
-export function drawField(ctx: CanvasRenderingContext2D, cam: Camera, st: Stadium, w: number, h: number, crowdWave: number): void {
+export function drawField(ctx: CanvasRenderingContext2D, cam: Camera, st: Stadium, w: number, h: number, crowdWave: number, time = 0): void {
   // Stands (behind the wall): a tall band of crowd above the fence line.
   ctx.save();
   const standPts: { x: number; y: number; z: number }[] = [];
@@ -180,8 +180,55 @@ export function drawField(ctx: CanvasRenderingContext2D, cam: Camera, st: Stadiu
       ctx.stroke();
     }
   }
+  if (st.hazard === 'beam') drawLighthouse(ctx, cam, st, time, time > 0);
   void w;
   void h;
+}
+
+/** Lighthouse Point: a striped tower beyond centre field whose beam sweeps the outfield. */
+function drawLighthouse(ctx: CanvasRenderingContext2D, cam: Camera, st: Stadium, time: number, beam: boolean): void {
+  // Off to right-centre so the paper stripes never sit behind the pitcher's release point.
+  const a = (25 * Math.PI) / 180;
+  const d = fenceAt(st, 25).dist + 150;
+  const lx = d * Math.sin(a), ly = d * Math.cos(a);
+  project(cam, lx, ly, 0, P);
+  if (P.depth < 2) return;
+  const bx = P.x, by = P.y, s = P.s;
+  project(cam, lx, ly, 55, P);
+  const tx = P.x, ty = P.y;
+  const wBase = 14 * s, wTop = 9 * s;
+  for (let i = 0; i < 6; i++) {
+    const k0 = i / 6, k1 = (i + 1) / 6;
+    ctx.fillStyle = i % 2 ? THEME.paper : THEME.pink;
+    ctx.beginPath();
+    const lx0 = bx + (tx - bx) * k0, ly0 = by + (ty - by) * k0, lx1 = bx + (tx - bx) * k1, ly1 = by + (ty - by) * k1;
+    const w0 = wBase + (wTop - wBase) * k0, w1 = wBase + (wTop - wBase) * k1;
+    ctx.moveTo(lx0 - w0 / 2, ly0);
+    ctx.lineTo(lx0 + w0 / 2, ly0);
+    ctx.lineTo(lx1 + w1 / 2, ly1);
+    ctx.lineTo(lx1 - w1 / 2, ly1);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.strokeStyle = THEME.ink;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(tx - wTop / 2, ty - 6 * s, wTop, 6 * s);
+  // Sweeping beam (lighter), only in the live field view: never baked into the batting view,
+  // where it would wash over the strike zone and cut ball contrast.
+  if (!beam) return;
+  const ang = Math.sin(time * 0.9) * 0.9 - Math.PI / 2;
+  const len = Math.max(400, s * 600);
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.globalAlpha = 0.18;
+  ctx.fillStyle = THEME.sun;
+  ctx.beginPath();
+  ctx.moveTo(tx, ty - 3 * s);
+  ctx.lineTo(tx + Math.cos(ang - 0.09) * len, ty - 3 * s + Math.sin(ang - 0.09) * len * -1);
+  ctx.lineTo(tx + Math.cos(ang + 0.09) * len, ty - 3 * s + Math.sin(ang + 0.09) * len * -1);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
 }
 
 /** Distance markers on the wall (e.g. "400"). */

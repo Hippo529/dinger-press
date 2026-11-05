@@ -22,6 +22,7 @@ import { easeOutCubic } from '../core/easing';
 import { TrailRing, squash } from './trail';
 
 export interface RenderSettings {
+  bat: string;
   showLocator: boolean;
   lefty: boolean;
   showTimingMs: boolean;
@@ -50,7 +51,7 @@ export class Renderer {
   zoneRect: Rect | null = null;
   mittSquashT = -99;
   insets: Insets = { top: 0, right: 0, bottom: 0, left: 0 };
-  settings: RenderSettings = { showLocator: true, lefty: false, showTimingMs: false };
+  settings: RenderSettings = { bat: 'wood', showLocator: true, lefty: false, showTimingMs: false };
   frames = 0;
 
   constructor(readonly canvas: HTMLCanvasElement, readonly fx: Fx, readonly parts: Particles, readonly pops: Popups, readonly replay: ReplayRing) {
@@ -144,7 +145,7 @@ export class Renderer {
       ctx.drawImage(this.battingBake(s, hand), 0, 0, this.w, this.h);
     } else {
       ctx.drawImage(skyBackdrop(this.w, this.h, this.dpr).canvas, 0, 0, this.w, this.h);
-      drawField(ctx, this.cam, STADIUMS[s.cfg.stadium], this.w, this.h, s.phase === 'celebrate' ? 0.6 + 0.4 * Math.sin(fx.now * 8) : 0);
+      drawField(ctx, this.cam, STADIUMS[s.cfg.stadium], this.w, this.h, s.phase === 'celebrate' ? 0.6 + 0.4 * Math.sin(fx.now * 8) : 0, fx.now);
       drawWallNumbers(ctx, this.cam, STADIUMS[s.cfg.stadium], FONTS.display);
     }
     this.drawActors(s, rt, hand);
@@ -219,8 +220,9 @@ export class Renderer {
     const batterRunning = s.runners.some((r) => r.isBatter && (r.d > 0 || r.delay <= 0)) || s.phase === 'celebrate';
     if (!batterRunning && s.phase !== 'handoff') {
       const sw = s.swing;
-      let pose: Pose = { kind: 'stance', t: now, facing: hand === 1 ? 1 : -1, back: this.view === 'bat', power: s.power };
-      if (sw) pose = { kind: 'swing', t: 0.42 + Math.max(0, rt - sw.t) / 0.2, facing: hand === 1 ? 1 : -1, back: this.view === 'bat', power: s.power };
+      const bat = humanBatter(s) !== null ? this.settings.bat : 'wood';
+      let pose: Pose = { kind: 'stance', t: now, facing: hand === 1 ? 1 : -1, back: this.view === 'bat', power: s.power, bat };
+      if (sw) pose = { kind: 'swing', t: 0.42 + Math.max(0, rt - sw.t) / 0.2, facing: hand === 1 ? 1 : -1, back: this.view === 'bat', power: s.power, bat };
       if (s.phase === 'dead' && s.banner?.text === 'STRIKEOUT') pose = { kind: 'slump', t: now, facing: hand === 1 ? 1 : -1, back: this.view === 'bat' };
       project(cam, hand === 1 ? -2.7 : 2.7, 0.3, 0, PJ);
       if (this.view === 'bat' || PJ.depth < 30) {

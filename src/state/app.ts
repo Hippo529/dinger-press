@@ -210,7 +210,7 @@ export class App implements InputHost, UiHost {
     const rm = st.reduceMotion ?? prefersReducedMotion();
     this.fx.settings = { reduceMotion: rm, shakePct: st.shakePct, flashes: st.flashes, slowmo: st.slowmo };
     document.documentElement.classList.toggle('reduce-motion', rm);
-    this.renderer.settings = { showLocator: st.showLocator, lefty: st.lefty, showTimingMs: st.showTimingMs };
+    this.renderer.settings = { bat: this.save.data.unlocks.includes('bat:' + st.bat) ? st.bat : 'wood', showLocator: st.showLocator, lefty: st.lefty, showTimingMs: st.showTimingMs };
     this.audio.volume = st.volume;
     this.audio.silentModeAudio = st.silentModeAudio;
     this.audio.applySession();

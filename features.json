@@ -1449,7 +1449,7 @@
    "Screenshot",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  },
  {
   "id": "F133",
@@ -1460,6 +1460,6 @@
    "Screenshot + fence unit test",
    "Pass"
   ],
-  "passes": false
+  "passes": true
  }
 ]

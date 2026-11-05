@@ -11,7 +11,15 @@ export interface Pose {
   facing: 1 | -1;
   back: boolean; // seen from behind (batter)
   power?: boolean;
+  bat?: string; // bat skin id
 }
+
+export const BAT_SKINS: Record<string, { body: string; stripe: string; bands: number }> = {
+  wood: { body: '#C9955B', stripe: '#E8C08A', bands: 0 },
+  gold: { body: '#FFC53D', stripe: '#FFF1B8', bands: 0 },
+  zebra: { body: '#F2E8D5', stripe: '#1B2140', bands: 5 },
+  riso: { body: '#FF4F7E', stripe: '#27B0AE', bands: 2 },
+};
 
 /** Limb angles (radians; 0 = straight down, + = toward facing). Exported for tests. */
 export interface Limbs {
@@ -198,12 +206,21 @@ export function drawCharacter(ctx: CanvasRenderingContext2D, x: number, y: numbe
       const ba = L.bat;
       const bl = 2.8 * sc;
       const bx = fax + Math.cos(ba) * bl * f, by = fay + Math.sin(ba) * bl;
-      capsule(ctx, fax, fay, bx, by, Math.max(2, 0.32 * sc), '#C9955B', ol);
-      ctx.strokeStyle = '#E8C08A';
-      ctx.lineWidth = Math.max(1, 0.1 * sc);
+      const skin = BAT_SKINS[pose.bat ?? 'wood'] ?? BAT_SKINS.wood;
+      capsule(ctx, fax, fay, bx, by, Math.max(2, 0.32 * sc), skin.body, ol);
+      ctx.strokeStyle = skin.stripe;
+      ctx.lineWidth = Math.max(1, (skin.bands ? 0.3 : 0.1) * sc);
       ctx.beginPath();
-      ctx.moveTo(fax + (bx - fax) * 0.5, fay + (by - fay) * 0.5);
-      ctx.lineTo(bx, by);
+      if (skin.bands) {
+        for (let i = 0; i < skin.bands; i++) {
+          const k0 = 0.35 + (i / skin.bands) * 0.6, k1 = k0 + 0.3 / skin.bands;
+          ctx.moveTo(fax + (bx - fax) * k0, fay + (by - fay) * k0);
+          ctx.lineTo(fax + (bx - fax) * k1, fay + (by - fay) * k1);
+        }
+      } else {
+        ctx.moveTo(fax + (bx - fax) * 0.5, fay + (by - fay) * 0.5);
+        ctx.lineTo(bx, by);
+      }
       ctx.stroke();
     }
   }

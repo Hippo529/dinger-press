@@ -203,6 +203,7 @@ function setupScreen(host: UiHost): HTMLElement {
         field('Captain', seg<string>([{ v: 'auto', label: 'AUTO' }, ...chars.slice(0, 3).map((c) => ({ v: c, label: ROSTER_BY_ID[c].short.slice(0, 6) }))], st.captain ?? 'auto', (v) => { st.captain = v === 'auto' ? null : v; host.settingsChanged(); }, 'setup-captain')),
         field('Bat first', seg<string>([{ v: 'on', label: 'YES' }, { v: 'off', label: 'NO' }], st.batFirst ? 'on' : 'off', (v) => { st.batFirst = v === 'on'; host.settingsChanged(); }, 'setup-batfirst')),
         field('Stadium', seg(stadiums, st.stadium, (v) => { st.stadium = v; host.settingsChanged(); }, 'setup-stadium')),
+        field('Bat', seg<string>(['wood', 'gold', 'zebra', 'riso'].filter((b) => b === 'wood' || host.save.data.unlocks.includes('bat:' + b)).map((b) => ({ v: b, label: b.toUpperCase() })), st.bat ?? 'wood', (v) => { st.bat = v; host.settingsChanged(); }, 'setup-bat')),
       ),
       el('p', { class: 'note' }, 'Tiers change the controls only. HEAT smoothly scales pitch speed, timing windows and CPU skill — and multiplies your scores.'),
       btn('Done', () => host.back(), 'primary', false, 'done'),

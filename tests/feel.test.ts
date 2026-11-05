@@ -332,3 +332,18 @@ describe('style discipline', () => {
     expect(css.match(/#[0-9a-fA-F]{3,8}\b/g)).toBeNull();
   });
 });
+
+import { STADIUMS, fenceAt } from '../src/sim/field';
+import { BAT_SKINS } from '../src/render/actors';
+describe('stretch: stadium + bat skins', () => {
+  it('Lighthouse Point: 430 ft to centre, 340 at the lines, 12 ft wall; beam hazard', () => {
+    expect(fenceAt(STADIUMS.lighthouse, 0)).toEqual({ dist: 430, height: 12 });
+    expect(fenceAt(STADIUMS.lighthouse, 45).dist).toBe(340);
+    expect(STADIUMS.lighthouse.hazard).toBe('beam');
+  });
+  it('bat skins are unlockable by achievements and distinct', () => {
+    expect(Object.keys(BAT_SKINS)).toEqual(['wood', 'gold', 'zebra', 'riso']);
+    expect(new Set(Object.values(BAT_SKINS).map((b) => b.body)).size).toBe(4);
+    expect(unlocksFor({ hr: 0, perfect: 0, hits: 0, ks: 0, wins: 0, clutchWins: 0, millBest: 0, longestHr: 0, maxEv: 111, bestPerfectStreak: 3, mercyWins: 1, dailyDone: 0, clutchCleared: 8 })).toEqual(expect.arrayContaining(['bat:gold', 'bat:zebra', 'bat:riso', 'stadium:lighthouse']));
+  });
+});

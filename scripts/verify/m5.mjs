@@ -221,3 +221,25 @@ m5.push({
     h.expect(s.last.grade === 'PERFECT', 'plays from file:// — swing graded ' + s.last.grade);
   },
 });
+
+m5.push({
+  name: 'stretch-skin-lighthouse',
+  viewports: ['iphone', 'desktop'],
+  async run(h) {
+    await h.open('test=1&seed=52');
+    await h.page.evaluate(() => localStorage.setItem('dingerpress.save', JSON.stringify({ v: 2, settings: { bat: 'zebra', stadium: 'lighthouse' }, flags: { firstRunDone: true }, stats: { pitchesSeen: 10 }, unlocks: ['bat:zebra', 'stadium:lighthouse'] })));
+    await h.page.reload();
+    await h.page.waitForFunction(() => window.__ready === true);
+    await helpers.startShort(h);
+    await h.until((x) => x.phase === 'prePitch' && x.humanBatting, { label: 'batting' });
+    const bat = await h.game(() => window.__game.app.renderer.settings.bat);
+    h.expect(bat === 'zebra', 'zebra bat skin active');
+    await h.advance(400);
+    await h.shot('bat-skin');
+    await h.page.evaluate(() => window.__game.forceContact(98, 34, 3));
+    await h.advance(1800);
+    await h.shot('lighthouse');
+    const st = await h.game(() => window.__game.getState().cfg.stadium);
+    h.expect(st === 'lighthouse', 'Lighthouse Point in play');
+  },
+});

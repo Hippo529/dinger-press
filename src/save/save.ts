@@ -24,6 +24,7 @@ export interface Settings {
   batFirst: boolean;
   stadium: 'yard' | 'gutter' | 'lighthouse';
   trail: string;
+  bat: string;
   captain: string | null;
   team: 'inkers' | 'hagfish' | 'gophers' | 'loons';
 }
@@ -63,7 +64,7 @@ export function defaultSettings(): Settings {
   return {
     tier: 'rookie', heat: 0, lefty: false, aggression: 'conservative', assistPitch: false, showLocator: true, hideLocatorExpert: false,
     showTimingMs: false, reduceMotion: null, shakePct: 100, flashes: true, slowmo: true, muted: false, volume: 0.8, silentModeAudio: false,
-    haptics: false, batFirst: true, stadium: 'yard', trail: 'paper', captain: null, team: 'inkers',
+    haptics: false, batFirst: true, stadium: 'yard', trail: 'paper', bat: 'wood', captain: null, team: 'inkers',
   };
 }
 
